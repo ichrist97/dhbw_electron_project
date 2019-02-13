@@ -1,0 +1,22 @@
+{
+  "name": "dhbw_electron_project",
+  "version": "1.0.0",
+  "description": "\"# dhbw_electron_project\"",
+  "main": "src/js/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ichrist97/dhbw_electron_project.git"
+  },
+  "author": "Ivo Christ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ichrist97/dhbw_electron_project/issues"
+  },
+  "homepage": "https://github.com/ichrist97/dhbw_electron_project#readme",
+  "dependencies": {
+    "electron": "^4.0.4"
+  }
+}
