@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Eintrag erstellen...</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="../../assets/css/addEntry.css">
+</head>
+
+<body>
+    <div class="container">
+        <form>
+            <div class="container">
+                <label for="type">Typ</label>
+                <select id="type">
+                    <option value="Wasser">Wasser</option>
+                    <option value="Strom">Strom</option>
+                    <option value="Gas">Gas</option>
+                </select>
+                <label for="datum">Datum</label>
+                <input id="datum" type="date">
+                <label for="verbrauch">Verbrauch</label>
+                <input id="verbrauch" type="text">
+                <label for="preis">Preis pro Einheit</label>
+                <input id="preis" type="text">
+                <button class="btn teal lighten-2" id="btnSubmit" type="submit">Erstellen &plus;</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const electron = require('electron');
+        const {
+            ipcRenderer
+        } = electron;
+
+        document.querySelector('form').addEventListener('submit', submitForm);
+
+        function submitForm(e) {
+            e.preventDefault();
+            // const item = document.querySelector('#item').value;
+
+            const entry = {
+                type: document.getElementById("datum").value,
+                date: document.getElementById("datum").value,
+                amount: document.getElementById("verbrauch").value,
+                price: document.getElementById("preis").value,
+            };
+            console.log(ipcRenderer);
+            ipcRenderer.send("entry:add", entry);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,13 +1,82 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Nebenkosten Helper</title>
-    
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-        <link rel="stylesheet" href="../../assets/css/main.css">
-      </head>
-      <body>
-          
-      </body>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nebenkosten Helper</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="../../assets/css/main.css">
+</head>
+
+<body>
+    <div class="grey darken-3 white-text centered">
+        <div class="container">
+            <h2>Nebenkosten</h2>
+        </div>
+    </div>
+
+    <div class="container">
+        <button class="btn btn-large teal lighten-2" id="btnCreateEntry">Create new entry &plus;</button>
+    </div>
+
+    <br>
+    <hr>
+
+    <!-- Wasser Tabelle -->
+    <div class="container">
+        <h4>Wasser</h4>
+        <table class="striped centered">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Verbrauch</th>
+                    <th>Preis pro Einheit</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyWasser">
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <hr>
+
+    <!-- Strom Tabelle -->
+    <div class="container">
+        <h4>Strom</h4>
+        <table class="striped centered">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Verbrauch</th>
+                    <th>Preis pro Einheit</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyStrom">
+            </tbody>
+        </table>
+    </div>
+    <br>
+    <hr>
+
+    <!-- Gas Tabelle -->
+    <div class="container">
+        <h4>Gas</h4>
+        <table class="striped centered">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Verbrauch</th>
+                    <th>Preis pro Einheit</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyGas">
+            </tbody>
+        </table>
+    </div>
+    <br>
+
+    <script src="../js/index.js"></script>
+</body>
+
 </html>
