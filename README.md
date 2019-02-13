@@ -6,7 +6,7 @@ This little application is for a university project at the DHBW Mannheim. It is 
 
 **Electron**
 
-The application is created with [Electron](https://electronjs.org/). Therefore it is basically a website which is run as a desktop application.
+The application is created with [Electron](https://electronjs.org/). Therefore it is basically a website which gets run as a desktop application.
 
 ## To Use
 
@@ -21,4 +21,4 @@ cd dhbw_electron_project
 npm install
 # Run the app
 npm start
-```ss
+```
