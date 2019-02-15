@@ -1,15 +1,17 @@
 // Modules to control application life and create native browser window
+const electron = require("electron");
 const {
     app,
     BrowserWindow,
     Menu,
     ipcMain
-} = require('electron');
+} = electron;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let aboutWindow;
+let addEntryWindow;
 
 function createWindow() {
     // Create the browser window.
@@ -25,7 +27,7 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadFile('src/html/index.html');
 
-    // Open the DevTools.
+    // Open the DevTools on start
     mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
@@ -80,10 +82,36 @@ app.on('activate', function () {
     }
 });
 
-// Catch entry:add
-ipcMain.on("enry:add", function (e, entry) {
+// Catch entry:add msg
+ipcMain.on("entry:add", function (event, entry) {
     mainWindow.webContents.send("entry:add", entry);
-    addWindow.close();
+    addEntryWindow.close();
     // Still have a reference to addWindow in memory. Need to reclaim memory (Garbage collection)
     addWindow = null;
+});
+
+//catch addEntryWindow msg
+ipcMain.on("openAddEntryWindow", (event) => {
+    addEntryWindow = new BrowserWindow({
+        width: 500,
+        height: 400,
+        title: 'Add Entry',
+        parent: mainWindow,
+        modal: true,
+        show: false
+    });
+    addEntryWindow.setMenu(null);
+    addEntryWindow.isResizable(false);
+
+    addEntryWindow.loadFile("src/html/addEntry.html");
+
+    //show
+    addEntryWindow.once("ready-to-show", () => {
+        addEntryWindow.show();
+    });
+
+    // Handle garbage collection
+    addEntryWindow.on('close', function () {
+        addEntryWindow = null;
+    });
 });
