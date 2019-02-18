@@ -7,6 +7,9 @@ const {
     ipcMain
 } = electron;
 
+// SET ENV
+process.env.NODE_ENV = 'dev';
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -27,19 +30,21 @@ function createWindow() {
     // and load the index.html of the app.
     mainWindow.loadFile('src/html/index.html');
 
-    // Open the DevTools on start
-    mainWindow.webContents.openDevTools();
-
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
         // Dereference the window object, usually you would store windows
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
-        mainWindow = null
+        mainWindow = null;
     });
 
     // Create menu bar
-    const mainMenu = Menu.buildFromTemplate([{
+    const mainMenu = Menu.buildFromTemplate(createMenu());
+    Menu.setApplicationMenu(mainMenu);
+}
+
+function createMenu() {
+    let menuTemplate = [{
             label: "File",
             submenu: [{
                 label: "Exit",
@@ -55,22 +60,39 @@ function createWindow() {
                 label: "About"
             }]
         }
-    ]);
-    Menu.setApplicationMenu(mainMenu);
+    ];
 
+    // Add developer tools option if in dev
+    if (process.env.NODE_ENV !== 'production') {
+        menuTemplate.push({
+            label: 'Developer Tools',
+            submenu: [{
+                    role: 'reload'
+                },
+                {
+                    label: 'Toggle DevTools',
+                    accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+                    click(item, focusedWindow) {
+                        focusedWindow.toggleDevTools();
+                    }
+                }
+            ]
+        });
+    }
+    return menuTemplate;
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
 })
 
@@ -95,7 +117,7 @@ ipcMain.on("openAddEntryWindow", (event) => {
     addEntryWindow = new BrowserWindow({
         width: 500,
         height: 400,
-        title: 'Add Entry',
+        title: 'Zählerstandeintrag erstellen...',
         parent: mainWindow,
         modal: true,
         show: false

@@ -3,3 +3,44 @@
     border-bottom-color: #4db6ac;
     border-bottom-style: solid;
 }
+
+/* Materialize Overwrite */
+#tabRow {
+    position: fixed;
+    top: 0;
+    z-index: 200;
+}
+
+ul .tabs {
+    width: 100%;
+}
+
+body .row {
+    padding-top: 60pt;
+}
+
+/* Show no tab start */
+body .tabContent {
+    display: none;
+}
+
+/* Border around tables */
+.tableContainer {
+    border: 1pt;
+    border-color: #212121;
+    border-style: solid;
+    padding: 20pt;
+}
+
+/* Scrollbar Background */
+::-webkit-scrollbar {
+    width: 12px;
+    background-color: #212121;
+    transition: all 250 ease;
+}
+
+/*Scrollbar button*/
+::-webkit-scrollbar-thumb {
+    background-color: #4db6ac;
+
+}
