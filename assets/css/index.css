@@ -4,24 +4,15 @@
     border-bottom-style: solid;
 }
 
-/* Materialize Overwrite */
+/* Fixed position of tabbar at top */
 #tabRow {
     position: fixed;
     top: 0;
     z-index: 200;
 }
 
-ul .tabs {
-    width: 100%;
-}
-
 body .row {
     padding-top: 60pt;
-}
-
-/* Show no tab start */
-body .tabContent {
-    display: none;
 }
 
 /* Border around tables */
@@ -43,4 +34,34 @@ body .tabContent {
 ::-webkit-scrollbar-thumb {
     background-color: #4db6ac;
 
+}
+
+/* Tabs Color Materialize Overwrite */
+/*Black color to the text*/
+.tabs .tab a {
+    color: #eee;
+}
+
+/*Text color on hover*/
+.tabs .tab a:hover {
+    background-color: #000;
+    color: #eee;
+}
+
+/*Background and text color when a tab is active*/
+.tabs .tab a.active {
+    background-color: #212121;
+    color: #eee;
+}
+
+.tabs .tab a:focus.active {
+    color: #26a69a;
+    /*Custom Text Color While Active*/
+    background-color: #000;
+    /*Custom Background Color While Active*/
+}
+
+/*Color of underline*/
+.tabs .indicator {
+    background-color: #4db6ac;
 }

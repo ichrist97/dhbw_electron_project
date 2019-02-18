@@ -137,3 +137,13 @@ ipcMain.on("openAddEntryWindow", (event) => {
         addEntryWindow = null;
     });
 });
+
+//sqlite3
+/*
+let knex = require("knex")({
+    client: "sqlite3",
+    connection: {
+        filename: "./database.sqlite"
+    }
+});
+*/

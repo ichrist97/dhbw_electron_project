@@ -3,6 +3,9 @@ const {
     ipcRenderer
 } = electron;
 
+// Jquery setup
+window.$ = window.jQuery = require('jquery');
+
 // submit form
 let btnSubmit = document.getElementById("btnSubmit");
 btnSubmit.addEventListener("click", (e) => {

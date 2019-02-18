@@ -1,39 +1,40 @@
+// Jquery setup
+window.$ = window.jQuery = require('jquery');
+
 var mysql = require('mysql');
 
 // Add the credentials to access your database
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: null, // or the original password : 'apaswword'
+    password: null,
     database: 'test'
 });
 
-// connect to mysql
-/*
-connection.connect(function (err) {
-    // in case of error
-    if (err) {
-        console.log(err.code);
-        console.log(err.fatal);
-    } else {
-        console.log("Connected to DB");
-    }
-});
-*/
+$(document).ready(() => {
+    connection.connect((err) => {
+        if (err) throw err;
 
-// Perform a query
-/*
-$query = 'SELECT * FROM `test_table`';
-connection.query($query, function (err, rows, fields) {
-    if (err) {
-        console.log("An error ocurred performing the query.");
-        console.log(err);
-        return;
-    }
+        let query = `SELECT * FROM user`;
+        console.log(query);
 
-    console.log("Query succesfully executed", rows);
+        connection.query(query, (err, result) => {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            }
+
+            Array.from(result).forEach((row) => {
+                console.log(row);
+            });
+        });
+
+        connection.end(() => {
+            console.log("Connection closed");
+        });
+    });
 });
-*/
 
 function addEntry(tableName, paramName, values) {
     connection.connect((err) => {
