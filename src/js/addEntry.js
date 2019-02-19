@@ -6,6 +6,8 @@ const {
 // Jquery setup
 window.$ = window.jQuery = require('jquery');
 
+const mysql = require('mysql');
+
 // submit form
 let btnSubmit = document.getElementById("btnSubmit");
 btnSubmit.addEventListener("click", (e) => {

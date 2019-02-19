@@ -112,7 +112,7 @@ ipcMain.on("entry:add", function (event, entry) {
     mainWindow.webContents.send("entry:add", entry);
     addEntryWindow.close();
     // Still have a reference to addWindow in memory. Need to reclaim memory (Garbage collection)
-    addWindow = null;
+    addEntryWindow = null;
 });
 
 //catch addEntryWindow msg
@@ -140,16 +140,6 @@ ipcMain.on("openAddEntryWindow", (event) => {
         addEntryWindow = null;
     });
 });
-
-//sqlite3
-/*
-let knex = require("knex")({
-    client: "sqlite3",
-    connection: {
-        filename: "./database.sqlite"
-    }
-});
-*/
 
 function openAboutWindow() {
     aboutWindow = new BrowserWindow({
