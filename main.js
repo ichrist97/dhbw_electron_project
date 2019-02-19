@@ -57,7 +57,10 @@ function createMenu() {
         {
             label: "Help",
             submenu: [{
-                label: "About"
+                label: "About",
+                click() {
+                    openAboutWindow();
+                }
             }]
         }
     ];
@@ -147,3 +150,28 @@ let knex = require("knex")({
     }
 });
 */
+
+function openAboutWindow() {
+    aboutWindow = new BrowserWindow({
+        width: 500,
+        height: 400,
+        title: 'Über',
+        parent: mainWindow,
+        modal: true,
+        show: false
+    });
+
+    aboutWindow.loadFile("src/html/about.html");
+    aboutWindow.setMenu(null);
+    aboutWindow.setResizable(false);
+
+    //show
+    aboutWindow.once("ready-to-show", () => {
+        aboutWindow.show();
+    });
+
+    // Handle garbage collection
+    aboutWindow.on('close', function () {
+        aboutWindow = null;
+    });
+}

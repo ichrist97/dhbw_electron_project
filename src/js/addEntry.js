@@ -15,7 +15,7 @@ btnSubmit.addEventListener("click", (e) => {
         type: document.getElementById("type").value,
         date: document.getElementById("datum").value,
         amount: document.getElementById("verbrauch").value,
-        price: document.getElementById("preis").value
+        counterNr: document.getElementById("zählernummer").value
     };
     ipcRenderer.send("entry:add", entry);
 });

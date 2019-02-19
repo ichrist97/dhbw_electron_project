@@ -41,6 +41,6 @@ ipcRenderer.on('entry:add', function (e, entry) {
     }
 
     // create table row
-    let htmlString = "<tr><td>" + entry.date + "</td><td>" + entry.amount + "</td><td>" + entry.price + "</td></tr>";
+    let htmlString = "<tr><td>" + entry.counterNr + "</td><td>" + entry.date + "</td><td>" + entry.amount + "</td></tr>";
     tbody.innerHTML += htmlString;
 });
