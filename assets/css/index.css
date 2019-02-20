@@ -72,3 +72,55 @@ body .row {
 .tabs .indicator {
     background-color: #4db6ac;
 }
+
+/* Round edit buttons in table*/
+table .btn-small {
+    border-radius: 10pt;
+}
+
+#btnCreateEntry {
+    border-radius: 10pt;
+}
+
+.gebühr {
+    border: 1pt;
+    border-style: solid;
+    border-color: #4db6ac;
+    padding: 10pt;
+    max-width: 100pt;
+    font-weight: bold;
+}
+
+.input-short {
+    max-width: 100pt;
+}
+
+.div-border .input-readonly {
+    border: 1pt;
+    border-style: solid;
+    border-color: #e0e0e0;
+    background-color: #eeeeee;
+}
+
+.underline-text-teal {
+    border-bottom: 2pt;
+    border-bottom-style: solid;
+    border-bottom-color: #4db6ac;
+}
+
+.div-border {
+    border: 1pt;
+    border-style: solid;
+    border-color: #e0e0e0;
+    padding: 10pt;
+}
+
+#bruttoBrauchwasser {
+    border: 1pt;
+    border-style: solid;
+    border-color: #4db6ac;
+}
+
+.collapseArrow {
+    float: right;
+}

@@ -21,9 +21,16 @@ window.$ = window.jQuery = require('jquery');
 M.AutoInit();
 
 $(document).ready(() => {
+    initInputStyle();
+
     //init materialize tabs
     $('.tabs').tabs({
         swipeable: true
+    });
+
+    //init collapsible
+    $('.collapsible').collapsible({
+        accordion: false
     });
 });
 
@@ -64,7 +71,11 @@ ipcRenderer.on('entry:add', function (e, entry) {
     }
 
     // create table row
-    let htmlString = "<tr><td>" + entry.counterNr + "</td><td>" + entry.date + "</td><td>" + entry.amount + "</td></tr>";
+    let editBtn = `<button class="btn-small waves-effect waves-light teal lighten-2">
+                        <i class="material-icons">mode_edit</i>
+                    </button>`;
+
+    let htmlString = `<tr><td>${entry.counterNr}</td><td>${entry.date}</td><td>${entry.amount}</td><td>${editBtn}</td></tr>`;
     tbody.innerHTML += htmlString;
 });
 
@@ -80,5 +91,17 @@ function insertDatabase(tableName, paramName, values) {
             return;
         }
         console.log("Query succesfully executed");
+    });
+}
+
+function initInputStyle() {
+    //change style of all readonly inputs to seperate them visually from the normal inputs
+    let inputs = document.getElementsByClassName("input-readonly");
+    Array.from(inputs).forEach((element) => {
+        console.log(element + "<br>change style");
+        element.style.border = "1pt";
+        element.style.borderColor = "#e0e0e0";
+        element.style.borderStyle = "solid";
+        element.style.backgroundColor = "#fafafa";
     });
 }

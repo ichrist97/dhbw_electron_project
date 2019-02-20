@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="../../assets/css/materialize.min.css">
     <link rel="stylesheet" href="../../assets/css/index.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="../js/materialize.min.js"></script>
     <script src="../../node_modules/chart.js/dist/Chart.min.js"></script>
 </head>
@@ -44,6 +45,7 @@
                             <th>Zählernummer</th>
                             <th>Datum</th>
                             <th>Verbrauch</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tbodyWasser">
@@ -61,6 +63,7 @@
                             <th>Zählernummer</th>
                             <th>Datum</th>
                             <th>Verbrauch</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tbodyStrom">
@@ -78,6 +81,7 @@
                             <th>Zählernummer</th>
                             <th>Datum</th>
                             <th>Verbrauch</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tbodyGas">
@@ -104,7 +108,161 @@
         </div>
 
         <div id="finanzen" class="col s12 tabContent">
-            <h1>Finanzen</h1>
+            <div class="container">
+                <ul class="collapsible expandable">
+                    <li>
+                        <div class="collapsible-header teal lighten-2">
+                            <h5 class="white-text"><i class="large material-icons">invert_colors</i>Wasser</h5>
+                        </div>
+                        <div class="collapsible-body">
+
+                            <div id="brauchwasser" class="div-border">
+                                <!--Verbrauch-->
+                                <h5><span class="underline-text-teal">Brauchwasser Verbrauch</span></h5>
+                                <label class="black-text" for="preisBrauchwasser">Preis pro [m³]</label>
+                                <input id="preisBrauchwasser" class="input-short" type="number">
+                                <br>
+                                <label class="black-text" for="wasserverbrauch">Brauchwasservolumen vom Zählerstand</label>
+                                <input id="wasserverbrauch" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="tage">Tage seit Abrechnungsperiodenbeginn</label>
+                                <input id="tageSeit" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="tageBis">Tage bis Abrechnungsperiodenende</label>
+                                <input id="tageBis" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="avgVebrauch">Ø Verbrauch [m³] / Tag </label>
+                                <input id="avgVerbrauch" class="input-short input-readonly" type="number" readonly>
+                                <br>
+
+                                <h6>Jahresgebühr Verbrauch</h6>
+                                <hr>
+                                <h6 id="brauchwasserGebühr" class="gebühr"></h6>
+                                <br>
+
+                                <!--Grungebühr-->
+                                <hr>
+                                <h5><span class="underline-text-teal">Brauchwasser Grundgebühr</span></h5>
+                                <label class="black-text" for="wasserGrundgebühr">Jahresgrundgebühr [€]</label>
+                                <input id="wasserGrundgebühr" class="input-short" type="number">
+                                <br>
+                                <label class="black-text" for="grundgebührTag">Ø Jahresgrundgebühr [€] / Tag</label>
+                                <input id="grundgebührTag" class="input-short input-readonly" type="number" readonly>
+                                <br>
+
+                                <h6>Summe Brauchwassergebühren</h6>
+                                <hr>
+                                <!--Nettosumme-->
+                                <label class="black-text" for="nettoBrauchwasser">Brauchwassergebühr Netto</label>
+                                <input id="nettoBrauchwasser" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <!--USt-->
+                                <label class="black-text" for="ustBrauchwasser">Umsatzsteuer 7%</label>
+                                <input id="ustBrauchwasser" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <!--Bruttosumme-->
+                                <hr>
+                                <label class="black-text" for="bruttoBrauchwasser">Brauchwassergebühr Brutto</label>
+                                <input id="bruttoBrauchwasser" class="input-short input-readonly" type="number"
+                                    readonly>
+                                <br>
+                            </div>
+
+                            <div id="abwasser" class="div-border">
+                                <h5><span class="underline-text-teal">Abwasser</span></h5>
+                                <label class="black-text" for="preisAbwasser">Preis pro [m³]</label>
+                                <input id="preisAbwasser" class="input-short" type="number">
+                                <br>
+                                <label class="black-text" for="brauchwasservolumen">Brauchwasservolumen</label>
+                                <input id="brauchwasservolumen" class="input-short input-readonly" type="number"
+                                    readonly>
+
+                                <h6>Jahresgebühr</h6>
+                                <hr>
+                                <h6 id="abwasserGebühr" class="gebühr"></h6>
+                            </div>
+
+                            <div id="niederschlagwasser" class="div-border">
+                                <h5><span class="underline-text-teal">Niederschlagwasser</span></h5>
+                                <label class="black-text" for="niederschlagfläche">Niederschlagsfläche [m²]</label>
+                                <input id="niederschlagfläche" class="input-short" type="number">
+                                <br>
+                                <label class="black-text" for="flächenpreis">Preis pro [m²]</label>
+                                <input id="flächenpreis" class="input-short" type="number">
+                                <br>
+                                <h6>Jahresgebühr</h6>
+                                <hr>
+                                <h6 id="niederschlagGebühr" class="gebühr"></h6>
+                            </div>
+
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header teal lighten-2">
+                            <h5 class="white-text">
+                                <i class="large material-icons">power</i>
+                                Strom
+                                <i class="material-icons">arrow_drop_down</i>
+                            </h5>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="div-border">
+                                <h5><span class="underline-text-teal">Stromverbrauch</span></h5>
+                                <label class="black-text" for="stromVerbrauch">Preis pro [m²]</label>
+                                <input id="stromVerbrauch" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="preisStrom">Preis pro [kWh]</label>
+                                <input id="preisStrom" class="input-short" type="number">
+                                <br>
+                                <h6>Stromverbrauchsgebühr</h6>
+                                <hr>
+                                <h6 id="stromverbrauchGebühr" class="gebühr"></h6>
+                            </div>
+
+                            <div class="div-border">
+                                <h5><span class="underline-text-teal">Stromsteuer</span></h5>
+                                <label class="black-text" for="stromsteuer">Stromsteuer [€] pro [kWh]</label>
+                                <input id="stromsteuer" class="input-short" type="number">
+                                <br>
+                                <h6>Stromsteuergebühr</h6>
+                                <hr>
+                                <h6 id="stromGebühr" class="gebühr"></h6>
+                            </div>
+
+                            <div class="div-border">
+                                <h5><span class="underline-text-teal">Servicepauschale</span></h5>
+                                <label class="black-text" for="servicepauschale">Servicepauschale [€] pro Jahr</label>
+                                <input id="servicepauschale" class="input-short" type="number">
+                                <br>
+                                <h6>Servicepauschalegebühr</h6>
+                                <hr>
+                                <h6 id="servicepauschaleGebühr" class="gebühr"></h6>
+                            </div>
+                            <br>
+                            <div class="div-border">
+                                <h5><span class="underline-text-teal">Summe Stromkosten</span></h5>
+                                <label class="black-text" for="nettoStrom">Netto Stromkosten</label>
+                                <input id="nettoStrom" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="ustStrom">Umsatzsteuer 19%</label>
+                                <input id="ustStrom" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <hr>
+                                <label class="black-text" for="bruttoStrom">Brutto Stromkosten</label>
+                                <input id="bruttoStrom" class="input-short input-readonly" type="number" readonly>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="collapsible-header teal lighten-2">
+                            <h5 class="white-text"><i class="large material-icons">cloud</i>Gas</h5>
+                        </div>
+                        <div class="collapsible-body">
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 

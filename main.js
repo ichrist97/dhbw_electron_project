@@ -45,9 +45,9 @@ function createWindow() {
 
 function createMenu() {
     let menuTemplate = [{
-            label: "File",
+            label: "Datei",
             submenu: [{
-                label: "Exit",
+                label: "Beenden",
                 accelerator: "Ctrl+Q",
                 click() {
                     app.quit();
@@ -55,9 +55,9 @@ function createMenu() {
             }]
         },
         {
-            label: "Help",
+            label: "Hilfe",
             submenu: [{
-                label: "About",
+                label: "Über",
                 click() {
                     openAboutWindow();
                 }
