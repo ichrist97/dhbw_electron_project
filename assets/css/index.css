@@ -25,7 +25,7 @@ body .row {
 /* Border around tables */
 .tableContainer {
     border: 1pt;
-    border-color: #212121;
+    border-color: #e0e0e0;
     border-style: solid;
     padding: 20pt;
 }
@@ -82,10 +82,23 @@ table .btn-small {
     border-radius: 10pt;
 }
 
+/*Intermediate sums*/
 .gebühr {
-    border: 1pt;
+    border: 2pt;
     border-style: solid;
     border-color: #4db6ac;
+    background-color: #eeeeee;
+    padding: 10pt;
+    max-width: 100pt;
+    font-weight: bold;
+}
+
+/*Final sums of category*/
+.final-gebühr {
+    border: 2pt;
+    border-style: solid;
+    border-color: #ffca28;
+    background-color: #eeeeee;
     padding: 10pt;
     max-width: 100pt;
     font-weight: bold;
@@ -123,4 +136,16 @@ table .btn-small {
 
 .collapseArrow {
     float: right;
+}
+
+/* Labels for Floating Action Button */
+.mobile-fab-tip {
+    position: fixed;
+    right: 60pt;
+    padding: 0pt 0.5rem;
+    text-align: right;
+    background-color: #323232;
+    border-radius: 5pt;
+    color: #FFF;
+    width: auto;
 }

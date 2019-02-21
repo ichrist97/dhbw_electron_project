@@ -17,21 +17,24 @@ let connection = mysql.createConnection({
 // Jquery setup
 window.$ = window.jQuery = require('jquery');
 
-// materialize setup
-M.AutoInit();
-
 $(document).ready(() => {
     initInputStyle();
 
-    //init materialize tabs
-    $('.tabs').tabs({
-        swipeable: true
-    });
-
-    //init collapsible
-    $('.collapsible').collapsible({
+    //collapsible
+    let elemsCollapsible = document.querySelectorAll('.collapsible.expandable');
+    let instanceCollapsible = M.Collapsible.init(elemsCollapsible, {
         accordion: false
     });
+
+    //tabs
+    let elemsTabs = document.querySelectorAll(".tabs");
+    let instanceTabs = M.Tabs.init(elemsTabs, {
+        swipeable: false
+    });
+
+    //fixed action button
+    let elemsFixedBtn = document.querySelectorAll('.fixed-action-btn');
+    let instanceFixedBtn = M.FloatingActionButton.init(elemsFixedBtn, {});
 });
 
 //Mapping of counter types to related foreign key id in database
@@ -98,10 +101,68 @@ function initInputStyle() {
     //change style of all readonly inputs to seperate them visually from the normal inputs
     let inputs = document.getElementsByClassName("input-readonly");
     Array.from(inputs).forEach((element) => {
-        console.log(element + "<br>change style");
         element.style.border = "1pt";
         element.style.borderColor = "#e0e0e0";
         element.style.borderStyle = "solid";
         element.style.backgroundColor = "#fafafa";
+    });
+}
+
+//fixed action button events
+/*
+ * the state of the collapsed bodies (open/closed) get stored in this map as a workaround
+ * the state cannot be retrieved otherwise
+ * the state is used as check for consistent icon changing of the body
+ */
+let collapsibleState = new Map(); //[Key: HTML Node, Value: Boolean]; Open: True; Closed: False
+Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
+    collapsibleState.set(element, false);
+});
+console.log(collapsibleState);
+
+//unfold all collapsible
+$("#unfoldAllCollapse").on("click", () => {
+    let instance = M.Collapsible.getInstance($('.collapsible.expandable'));
+    //instance.open();
+    Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
+        let isOpen = collapsibleState.get(element);
+        if (!isOpen) {
+            //trigger click event for related header to open body and change icon
+            element.click();
+        }
+    });
+});
+//close all collapsible
+$("#closeAllCollapse").on("click", () => {
+    let instance = M.Collapsible.getInstance($('.collapsible.expandable'));
+    Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
+        let isOpen = collapsibleState.get(element);
+        if (isOpen) {
+            //trigger click event for related header to open body and change icon
+            element.click();
+        }
+    });
+});
+
+//change icon of collapsible when opening or closing
+Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
+    element.addEventListener("click", (event) => {
+        //change state
+        let state = collapsibleState.get(element);
+        collapsibleState.set(element, !state);
+        //set icon
+        changeCollapseHeaderIcon(element);
+    });
+});
+
+function changeCollapseHeaderIcon(element) {
+    let icons = element.getElementsByTagName("i");
+    Array.from(icons).forEach((icon) => {
+        let innerText = icon.innerText;
+        if (innerText === "keyboard_arrow_down") { //from closed to opened
+            icon.innerText = "keyboard_arrow_up";
+        } else if (innerText === "keyboard_arrow_up") { //from opened to closed
+            icon.innerText = "keyboard_arrow_down";
+        }
     });
 }

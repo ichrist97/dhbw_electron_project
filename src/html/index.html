@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../../assets/css/materialize.min.css">
     <link rel="stylesheet" href="../../assets/css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="../js/materialize.min.js"></script>
     <script src="../../node_modules/chart.js/dist/Chart.min.js"></script>
 </head>
 
@@ -17,12 +16,11 @@
     <div class="row">
         <div id="tabRow" class="col s12">
             <ul class="tabs z-depth-1">
-                <li class="tab col s4 grey darken-4"><a class="active white-text" href="#entryTab">Zählerstände</a></li>
+                <li class="tab col s4 grey darken-4"><a class="white-text" href="#entryTab">Zählerstände</a></li>
                 <li class="tab col s4 grey darken-4"><a class="white-text" href="#dashboard">Dashboard</a></li>
-                <li class="tab col s4 grey darken-4"><a class="white-text" href="#finanzen">Finanzen</a></li>
+                <li class="tab col s4 grey darken-4"><a class="active white-text" href="#finanzen">Finanzen</a></li>
             </ul>
         </div>
-
 
         <!-- Entry Tab -->
         <div id="entryTab" class="col s12 tabContent">
@@ -37,7 +35,7 @@
             <br>
 
             <!-- Wasser Tabelle -->
-            <div class="container tableContainer">
+            <div class="container tableContainer z-depth-1">
                 <h4 class="table-header">Wasser</h4>
                 <table class="striped centered">
                     <thead>
@@ -55,7 +53,7 @@
             <br>
 
             <!-- Strom Tabelle -->
-            <div class="container tableContainer">
+            <div class="container tableContainer z-depth-1">
                 <h4 class="table-header">Strom</h4>
                 <table class="striped centered">
                     <thead>
@@ -73,7 +71,7 @@
             <br>
 
             <!-- Gas Tabelle -->
-            <div class="container tableContainer">
+            <div class="container tableContainer z-depth-1">
                 <h4 class="table-header">Gas</h4>
                 <table class="striped centered">
                     <thead>
@@ -88,6 +86,24 @@
                     </tbody>
                 </table>
             </div>
+
+            <!--Floating Action Button-->
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large teal lighten-2 z-depth-2">
+                    <i class="large material-icons">menu</i>
+                </a>
+                <ul>
+                    <li>
+                        <a id="addEntry" class="btn-floating amber"><i class="material-icons">add</i></a>
+                        <a class="btn-floating mobile-fab-tip">Neuen Zählerstand eintragen</a>
+                    </li>
+                    <li>
+                        <a class="btn-floating amber"><i class="material-icons">refresh</i></a>
+                        <a class="btn-floating mobile-fab-tip">Datenbestand aktualisieren</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
         <div id="dashboard" class="col s12 tabContent">
@@ -109,14 +125,17 @@
 
         <div id="finanzen" class="col s12 tabContent">
             <div class="container">
-                <ul class="collapsible expandable">
+                <ul class="collapsible expandable z-depth-1">
+                    <!--Wasser-->
                     <li>
-                        <div class="collapsible-header teal lighten-2">
-                            <h5 class="white-text"><i class="large material-icons">invert_colors</i>Wasser</h5>
+                        <div class="collapsible-header teal lighten-2 white-text valign-wrapper">
+                            <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
+                            <h5><i class="large material-icons">invert_colors</i>Wasser</h5>
                         </div>
                         <div class="collapsible-body">
 
-                            <div id="brauchwasser" class="div-border">
+                            <!--Brauchwasser-->
+                            <div id="brauchwasser" class="div-border z-depth-1">
                                 <!--Verbrauch-->
                                 <h5><span class="underline-text-teal">Brauchwasser Verbrauch</span></h5>
                                 <label class="black-text" for="preisBrauchwasser">Preis pro [m³]</label>
@@ -161,14 +180,14 @@
                                 <input id="ustBrauchwasser" class="input-short input-readonly" type="number" readonly>
                                 <br>
                                 <!--Bruttosumme-->
+                                <h6>Brutto Brauchwassergebühr</h6>
                                 <hr>
-                                <label class="black-text" for="bruttoBrauchwasser">Brauchwassergebühr Brutto</label>
-                                <input id="bruttoBrauchwasser" class="input-short input-readonly" type="number"
-                                    readonly>
+                                <h6 class="gebühr"></h6>
                                 <br>
                             </div>
 
-                            <div id="abwasser" class="div-border">
+                            <!--Abwasser-->
+                            <div id="abwasser" class="div-border z-depth-1">
                                 <h5><span class="underline-text-teal">Abwasser</span></h5>
                                 <label class="black-text" for="preisAbwasser">Preis pro [m³]</label>
                                 <input id="preisAbwasser" class="input-short" type="number">
@@ -182,7 +201,8 @@
                                 <h6 id="abwasserGebühr" class="gebühr"></h6>
                             </div>
 
-                            <div id="niederschlagwasser" class="div-border">
+                            <!--Niederschlagwasser-->
+                            <div id="niederschlagwasser" class="div-border z-depth-1">
                                 <h5><span class="underline-text-teal">Niederschlagwasser</span></h5>
                                 <label class="black-text" for="niederschlagfläche">Niederschlagsfläche [m²]</label>
                                 <input id="niederschlagfläche" class="input-short" type="number">
@@ -194,21 +214,31 @@
                                 <hr>
                                 <h6 id="niederschlagGebühr" class="gebühr"></h6>
                             </div>
+                            <br>
+
+                            <div class="div-border z-depth-1">
+                                <h5><span class="underline-text-teal">Summe Wasserkosten</span></h5>
+                                <br>
+                                <h5 id="gesamtWasser" class="final-gebühr"></h5>
+                            </div>
 
                         </div>
                     </li>
+
+                    <!--Strom-->
                     <li>
-                        <div class="collapsible-header teal lighten-2">
+                        <div class="collapsible-header teal lighten-2 valign-wrapper">
+                            <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
                             <h5 class="white-text">
                                 <i class="large material-icons">power</i>
                                 Strom
-                                <i class="material-icons">arrow_drop_down</i>
                             </h5>
                         </div>
-                        <div class="collapsible-body">
-                            <div class="div-border">
+                        <div class="collapsible-body z-depth-1">
+                            <!--Stromverbrauch-->
+                            <div class="div-border z-depth-1">
                                 <h5><span class="underline-text-teal">Stromverbrauch</span></h5>
-                                <label class="black-text" for="stromVerbrauch">Preis pro [m²]</label>
+                                <label class="black-text" for="stromVerbrauch">Verbrauchter Strom in [kWh]</label>
                                 <input id="stromVerbrauch" class="input-short input-readonly" type="number" readonly>
                                 <br>
                                 <label class="black-text" for="preisStrom">Preis pro [kWh]</label>
@@ -219,7 +249,8 @@
                                 <h6 id="stromverbrauchGebühr" class="gebühr"></h6>
                             </div>
 
-                            <div class="div-border">
+                            <!--Stromsteuer-->
+                            <div class="div-border z-depth-1">
                                 <h5><span class="underline-text-teal">Stromsteuer</span></h5>
                                 <label class="black-text" for="stromsteuer">Stromsteuer [€] pro [kWh]</label>
                                 <input id="stromsteuer" class="input-short" type="number">
@@ -229,7 +260,8 @@
                                 <h6 id="stromGebühr" class="gebühr"></h6>
                             </div>
 
-                            <div class="div-border">
+                            <!--Servicepauschale-->
+                            <div class="div-border z-depth-1">
                                 <h5><span class="underline-text-teal">Servicepauschale</span></h5>
                                 <label class="black-text" for="servicepauschale">Servicepauschale [€] pro Jahr</label>
                                 <input id="servicepauschale" class="input-short" type="number">
@@ -239,7 +271,8 @@
                                 <h6 id="servicepauschaleGebühr" class="gebühr"></h6>
                             </div>
                             <br>
-                            <div class="div-border">
+                            <!--Summe Stromkosten-->
+                            <div class="div-border z-depth-1">
                                 <h5><span class="underline-text-teal">Summe Stromkosten</span></h5>
                                 <label class="black-text" for="nettoStrom">Netto Stromkosten</label>
                                 <input id="nettoStrom" class="input-short input-readonly" type="number" readonly>
@@ -247,25 +280,108 @@
                                 <label class="black-text" for="ustStrom">Umsatzsteuer 19%</label>
                                 <input id="ustStrom" class="input-short input-readonly" type="number" readonly>
                                 <br>
+                                <h6>Brutto Stromkosten</h6>
                                 <hr>
-                                <label class="black-text" for="bruttoStrom">Brutto Stromkosten</label>
-                                <input id="bruttoStrom" class="input-short input-readonly" type="number" readonly>
+                                <h5 id="bruttoStrom" class="final-gebühr"></h5>
                             </div>
                         </div>
                     </li>
+
+                    <!--Gas-->
                     <li>
-                        <div class="collapsible-header teal lighten-2">
+                        <div class="collapsible-header teal lighten-2  valign-wrapper">
+                            <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
                             <h5 class="white-text"><i class="large material-icons">cloud</i>Gas</h5>
                         </div>
-                        <div class="collapsible-body">
+                        <div class="collapsible-body z-depth-1 active">
+
+                            <!--Arbeitspreis-->
+                            <div class="div-border z-depth-1">
+                                <h5><span class="underline-text-teal">Arbeitspreis</span></h5>
+                                <label class="black-text" for="gasverbrauch">Gasverbrauch in [m³]</label>
+                                <input id="gasverbrauch" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="zustandszahl">Zustandszahl (laut Anmerkung SWHD)</label>
+                                <input id="zustandszahl" class="input-short" type="number">
+                                <br>
+                                <label class="black-text" for="brennwert">Brennwert [kWh] (laut Anmerkung SWHD)</label>
+                                <input id="brennwert" class="input-short" type="number">
+                                <br>
+                                <label class="black-text" for="energievolumen">Energie [kWh] berechnet aus Gasvolumen</label>
+                                <input id="energievolument" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="preisGas">Preis [€] pro [kWh]</label>
+                                <input id="preisGas" class="input-short" type="number">
+                                <br>
+                                <h6>Arbeitspreisgebühr</h6>
+                                <hr>
+                                <h6 id="arbeitspreisGebühr" class="gebühr"></h6>
+                            </div>
+
+                            <!--Grundpreis-->
+                            <div class="div-border z-depth-1">
+                                <h5><span class="underline-text-teal">Grundpreis</span></h5>
+                                <label class="black-text" for="grundpreisJahr">Grundpreis [€] pro Jahr</label>
+                                <input id="grundpreisJahr" class="input-short" type="number">
+                                <br>
+                                <h6>Grundpreisgebühr</h6>
+                                <hr>
+                                <h6 id="grundpreisGebühr" class="gebühr"></h6>
+                            </div>
+
+                            <!--Erdgassteuer-->
+                            <div class="div-border z-depth-1">
+                                <h5><span class="underline-text-teal">Erdgassteuer</span></h5>
+                                <label class="black-text" for="erdgassteuer">Erdgassteuer [€] pro [kWh]</label>
+                                <input id="erdgassteuer" class="input-short" type="number">
+                                <br>
+                                <h6>Erdgassteuergebühr</h6>
+                                <hr>
+                                <h6 id="erdgassteuerGebühr" class="gebühr"></h6>
+                            </div>
+                            <br>
+                            <!--Summe Gaskosten-->
+                            <div class="div-border z-depth-1">
+                                <h5><span class="underline-text-teal">Summe Gaskosten</span></h5>
+                                <label class="black-text" for="nettoGas">Netto Gaskosten</label>
+                                <input id="nettoGas" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <label class="black-text" for="ustGas">Umsatzsteuer 19%</label>
+                                <input id="ustGas" class="input-short input-readonly" type="number" readonly>
+                                <br>
+                                <h6>Brutto Gaskosten</h6>
+                                <hr>
+                                <h5 id="bruttoGas" class="final-gebühr"></h5>
+                            </div>
 
                         </div>
                     </li>
                 </ul>
             </div>
+
+            <!--Floating Action Button-->
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large teal lighten-2 z-depth-2">
+                    <i class="large material-icons">menu</i>
+                </a>
+                <ul>
+                    <li>
+                        <a id="unfoldAllCollapse" class="btn-floating amber"><i class="material-icons">unfold_more</i></a>
+                        <a class="btn-floating mobile-fab-tip">Alles aufklappen</a>
+                    </li>
+                    <li>
+                        <a id="closeAllCollapse" class="btn-floating amber lighten-1"><i class="material-icons">unfold_less</i></a>
+                        <a class="btn-floating mobile-fab-tip">Alles schließen</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+
+
+
     </div>
 
+    <script src="../js/materialize.min.js"></script>
     <script src="../js/index.js"></script>
     <script src="../js/charts.js"></script>
     <!--<script src="../js/db.js"></script>-->
