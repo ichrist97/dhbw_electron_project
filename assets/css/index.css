@@ -97,7 +97,7 @@ table .btn-small {
 .final-gebühr {
     border: 2pt;
     border-style: solid;
-    border-color: #ffca28;
+    border-color: #644d6c;
     background-color: #eeeeee;
     padding: 10pt;
     max-width: 100pt;
@@ -148,4 +148,9 @@ table .btn-small {
     border-radius: 5pt;
     color: #FFF;
     width: auto;
+}
+
+/* Floating accessory buttons of the main floating button */
+.floating-acc-btn {
+    background-color: #644d6c;
 }

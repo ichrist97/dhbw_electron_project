@@ -17,8 +17,8 @@
         <div id="tabRow" class="col s12">
             <ul class="tabs z-depth-1">
                 <li class="tab col s4 grey darken-4"><a class="white-text" href="#entryTab">Zählerstände</a></li>
-                <li class="tab col s4 grey darken-4"><a class="white-text" href="#dashboard">Dashboard</a></li>
-                <li class="tab col s4 grey darken-4"><a class="active white-text" href="#finanzen">Finanzen</a></li>
+                <li class="tab col s4 grey darken-4"><a class="active white-text" href="#dashboard">Dashboard</a></li>
+                <li class="tab col s4 grey darken-4"><a class="white-text" href="#finanzen">Finanzen</a></li>
             </ul>
         </div>
 
@@ -94,11 +94,12 @@
                 </a>
                 <ul>
                     <li>
-                        <a id="addEntry" class="btn-floating amber"><i class="material-icons">add</i></a>
+                        <a href="#modalAddEntry" id="addEntry" class="btn-floating floating-acc-btn modal-trigger"><i
+                                class="material-icons">add</i></a>
                         <a class="btn-floating mobile-fab-tip">Neuen Zählerstand eintragen</a>
                     </li>
                     <li>
-                        <a class="btn-floating amber"><i class="material-icons">refresh</i></a>
+                        <a class="btn-floating floating-acc-btn"><i class="material-icons">refresh</i></a>
                         <a class="btn-floating mobile-fab-tip">Datenbestand aktualisieren</a>
                     </li>
                 </ul>
@@ -366,19 +367,56 @@
                 </a>
                 <ul>
                     <li>
-                        <a id="unfoldAllCollapse" class="btn-floating amber"><i class="material-icons">unfold_more</i></a>
+                        <a id="unfoldAllCollapse" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
                         <a class="btn-floating mobile-fab-tip">Alles aufklappen</a>
                     </li>
                     <li>
-                        <a id="closeAllCollapse" class="btn-floating amber lighten-1"><i class="material-icons">unfold_less</i></a>
+                        <a id="closeAllCollapse" class="btn-floating floating-acc-btn lighten-1"><i class="material-icons">unfold_less</i></a>
                         <a class="btn-floating mobile-fab-tip">Alles schließen</a>
                     </li>
                 </ul>
             </div>
         </div>
 
+    </div>
 
+    <!-- Modal Add Entry -->
+    <div id="modalAddEntry" class="modal">
+        <div class="modal-content">
+            <!--Header-->
+            <h4>Neuen Zählerstand eintragen...</h4>
+            <hr>
+            <!--Content-->
+            <div class="container">
+                <label for="type" class="teal-text lighten-2">Typ</label>
+                <div class="input-field">
+                    <select id="type">
+                        <option value="" disabled selected>Wähle deine Option</option>
+                        <option value="Wasser">Wasser</option>
+                        <option value="Strom">Strom</option>
+                        <option value="Gas">Gas</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="zählernummer" class="teal-text lighten-2">Zählernummer</label>
+                    <input id="zählernummer" type="number">
+                </div>
+                <div class="input-field">
+                    <label for="datum" class="teal-text lighten-2">Datum</label>
+                    <input id="datum" type="text" class="datepicker">
+                </div>
+                <div class="input-field">
+                    <label id="verbrauchLabel" for="verbrauch" class="teal-text lighten-2">Verbrauch</label>
+                    <input id="verbrauch" type="number">
+                </div>
+            </div>
 
+        </div>
+        <hr style="width:95%;">
+        <div class="modal-footer">
+            <a id="closeModal" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
+            <a id="addEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Eintragen</a>
+        </div>
     </div>
 
     <script src="../js/materialize.min.js"></script>

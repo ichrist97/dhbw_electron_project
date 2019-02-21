@@ -20,21 +20,35 @@ window.$ = window.jQuery = require('jquery');
 $(document).ready(() => {
     initInputStyle();
 
-    //collapsible
+    //init collapsible
     let elemsCollapsible = document.querySelectorAll('.collapsible.expandable');
     let instanceCollapsible = M.Collapsible.init(elemsCollapsible, {
         accordion: false
     });
 
-    //tabs
+    //init tabs
     let elemsTabs = document.querySelectorAll(".tabs");
     let instanceTabs = M.Tabs.init(elemsTabs, {
         swipeable: false
     });
 
-    //fixed action button
+    //init fixed action button
     let elemsFixedBtn = document.querySelectorAll('.fixed-action-btn');
     let instanceFixedBtn = M.FloatingActionButton.init(elemsFixedBtn, {});
+
+    //init modal
+    let elemsModal = document.querySelectorAll('.modal');
+    let instanceModal = M.Modal.init(elemsModal, {});
+
+    //init select
+    var elemsSelect = document.querySelectorAll('select');
+    var instanceSelect = M.FormSelect.init(elemsSelect, {});
+
+    //init datepicker
+    var elemsDatepicker = document.querySelectorAll('.datepicker');
+    var instanceDatepicker = M.Datepicker.init(elemsDatepicker, {
+        format: "dd.mm.yyyy"
+    });
 });
 
 //Mapping of counter types to related foreign key id in database
@@ -155,6 +169,7 @@ Array.from(document.getElementsByClassName("collapsible-header")).forEach((eleme
     });
 });
 
+//change icon of collapse header when closing or opening the header
 function changeCollapseHeaderIcon(element) {
     let icons = element.getElementsByTagName("i");
     Array.from(icons).forEach((icon) => {
@@ -166,3 +181,25 @@ function changeCollapseHeaderIcon(element) {
         }
     });
 }
+
+//change the unit of measure according to the selected type in the addEntryModal
+$("#type").on("change", (event) => {
+    let value = event.target.options[event.target.selectedIndex].value;
+    if (value === "Wasser" || value === "Gas") {
+        document.getElementById("verbrauchLabel").innerText = "Verbrauch [m³]";
+    } else if (value === "Strom") {
+        document.getElementById("verbrauchLabel").innerText = "Verbrauch [kWh]";
+    }
+});
+
+//clear modal when closing it
+$("#closeModal").on("click", () => {
+    console.log("modal closed")
+    //clear inputs
+    let inputs = document.getElementById("modalAddEntry").querySelectorAll("input");
+    Array.from(inputs).forEach((element) => {
+        element.value = "";
+    });
+    //clear select
+    document.getElementById("modalAddEntry").querySelector("select").selectedIndex = 0;
+});
