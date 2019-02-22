@@ -1,10 +1,17 @@
-/*
-.table-header {
-    border-bottom: 2pt;
-    border-bottom-color: #4db6ac;
-    border-bottom-style: solid;
+/* Swipeable tabs fix */
+.tabs-content.carousel.carousel-slider .carousel-item.active {
+    position: relative;
 }
-*/
+
+.tabs-content.carousel.carousel-slider {
+    height: auto !important;
+}
+
+.thead-border {
+    border-bottom: 2pt;
+    border-bottom-style: solid;
+    border-bottom-color: #644d6c;
+}
 
 /* Fixed position of tabbar at top */
 #tabRow {

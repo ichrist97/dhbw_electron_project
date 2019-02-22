@@ -19,8 +19,10 @@ $(document).ready(() => {
     //init tabs
     let elemsTabs = document.querySelectorAll(".tabs");
     let instanceTabs = M.Tabs.init(elemsTabs, {
-        swipeable: false
+        swipeable: true
     });
+
+    //$('.tabs-content.carousel.carousel-slider').css("height", "auto");
 
     //init fixed action button
     let elemsFixedBtn = document.querySelectorAll('.fixed-action-btn');
@@ -47,15 +49,8 @@ typeMap.set("Wasser", 1);
 typeMap.set("Strom", 2);
 typeMap.set("Strom", 3);
 
-// open addEntry window
-/*
-let btnCreateEntry = document.getElementById("btnCreateEntry");
-btnCreateEntry.addEventListener("click", () => {
-    ipcRenderer.send("openAddEntryWindow");
-});
-*/
-
 // create entry in table
+/*
 ipcRenderer.on('entry:add', function (e, entry) {
     //create database entry
     let tableName = "zählerstand";
@@ -87,6 +82,7 @@ ipcRenderer.on('entry:add', function (e, entry) {
     let htmlString = `<tr><td>${entry.counterNr}</td><td>${entry.date}</td><td>${entry.amount}</td><td>${editBtn}</td></tr>`;
     tbody.innerHTML += htmlString;
 });
+*/
 
 function addTableEntry() {
     //create database entry
@@ -142,29 +138,42 @@ Array.from(document.getElementsByClassName("collapsible-header")).forEach((eleme
     collapsibleState.set(element, false);
 });
 
+
 //unfold all collapsible
-$("#unfoldAllCollapse").on("click", () => {
-    let instance = M.Collapsible.getInstance($('.collapsible.expandable'));
-    //instance.open();
-    Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
+//$("#unfoldAllCollapsibleFinance").on("click", unfoldCollapsible("#finanzen"));
+$("#unfoldAllCollapsibleFinance").on("click", () => {
+    unfoldCollapsible("#finanzen");
+});
+$("#unfoldAllCollapsibleTable").on("click", () => {
+    unfoldCollapsible("#data");
+});
+//close all collapsible
+$("#closeAllCollapsibleFinance").on("click", () => {
+    closeCollapsible("#finanzen");
+});
+$("#closeAllCollapsibleTable").on("click", () => {
+    closeCollapsible("#data");
+});
+
+function unfoldCollapsible(tabTargetId) {
+    Array.from(document.querySelector(tabTargetId).getElementsByClassName("collapsible-header")).forEach((element) => {
         let isOpen = collapsibleState.get(element);
         if (!isOpen) {
             //trigger click event for related header to open body and change icon
             element.click();
         }
     });
-});
-//close all collapsible
-$("#closeAllCollapse").on("click", () => {
-    let instance = M.Collapsible.getInstance($('.collapsible.expandable'));
-    Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
+}
+
+function closeCollapsible(tabTargetId) {
+    Array.from(document.querySelector(tabTargetId).getElementsByClassName("collapsible-header")).forEach((element) => {
         let isOpen = collapsibleState.get(element);
         if (isOpen) {
             //trigger click event for related header to open body and change icon
             element.click();
         }
     });
-});
+}
 
 //change icon of collapsible when opening or closing
 Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {

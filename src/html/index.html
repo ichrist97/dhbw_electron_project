@@ -16,26 +16,15 @@
     <div class="row">
         <div id="tabRow" class="col s12">
             <ul class="tabs z-depth-1">
-                <li class="tab col s4 grey darken-4"><a class="white-text" href="#entryTab">Zählerstände</a></li>
+                <li class="tab col s4 grey darken-4"><a class="white-text" href="#data">Zählerstände</a></li>
                 <li class="tab col s4 grey darken-4"><a class="active white-text" href="#dashboard">Dashboard</a></li>
                 <li class="tab col s4 grey darken-4"><a class="white-text" href="#finanzen">Finanzen</a></li>
             </ul>
         </div>
 
-        <!-- Entry Tab -->
+        <!-- Data Tab -->
+        <div id="data" class="col s12 tabContent">
 
-        <div id="entryTab" class="col s12 tabContent">
-            <!--
-            <div class="container">
-                <button class="btn waves-effect waves-light teal lighten-2" id="btnCreateEntry">
-                    Create new entry &plus;
-                </button>
-            </div>
-
-            <br>
-            <div class="divider"></div>
-            <br>
-            -->
             <div class="container">
                 <ul class="collapsible expandable">
                     <!-- Wasser Tabelle -->
@@ -46,7 +35,7 @@
                         </div>
                         <div class="collapsible-body tableContainer">
                             <table class="striped centered">
-                                <thead>
+                                <thead class="thead-border">
                                     <tr>
                                         <th>Zählernummer</th>
                                         <th>Datum</th>
@@ -72,7 +61,7 @@
                         <div class="collapsible-body tableContainer z-depth-1">
 
                             <table class="striped centered">
-                                <thead>
+                                <thead class="thead-border">
                                     <tr>
                                         <th>Zählernummer</th>
                                         <th>Datum</th>
@@ -95,7 +84,7 @@
                         <div class="collapsible-body tableContainer z-depth-1">
 
                             <table class="striped centered">
-                                <thead>
+                                <thead class="thead-border">
                                     <tr>
                                         <th>Zählernummer</th>
                                         <th>Datum</th>
@@ -128,11 +117,11 @@
                         <a class="btn-floating mobile-fab-tip">Datenbestand aktualisieren</a>
                     </li>
                     <li>
-                        <a id="unfoldAllCollapse" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
+                        <a id="unfoldAllCollapsibleTable" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
                         <a class="btn-floating mobile-fab-tip">Alles aufklappen</a>
                     </li>
                     <li>
-                        <a id="closeAllCollapse" class="btn-floating floating-acc-btn lighten-1"><i class="material-icons">unfold_less</i></a>
+                        <a id="closeAllCollapsibleTable" class="btn-floating floating-acc-btn lighten-1"><i class="material-icons">unfold_less</i></a>
                         <a class="btn-floating mobile-fab-tip">Alles schließen</a>
                     </li>
                 </ul>
@@ -414,11 +403,11 @@
                 </a>
                 <ul>
                     <li>
-                        <a id="unfoldAllCollapse" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
+                        <a id="unfoldAllCollapsibleFinance" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
                         <a class="btn-floating mobile-fab-tip">Alles aufklappen</a>
                     </li>
                     <li>
-                        <a id="closeAllCollapse" class="btn-floating floating-acc-btn lighten-1"><i class="material-icons">unfold_less</i></a>
+                        <a id="closeAllCollapsibleFinance" class="btn-floating floating-acc-btn lighten-1"><i class="material-icons">unfold_less</i></a>
                         <a class="btn-floating mobile-fab-tip">Alles schließen</a>
                     </li>
                 </ul>
