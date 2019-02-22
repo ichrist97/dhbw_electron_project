@@ -4,16 +4,6 @@ const {
 } = electron;
 const browserWindow = electron.remote.BrowserWindow;
 
-// database
-const mysql = require('mysql');
-// Add the credentials to access your database
-let connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: null,
-    database: 'nebenkosten'
-});
-
 // Jquery setup
 window.$ = window.jQuery = require('jquery');
 
@@ -58,10 +48,12 @@ typeMap.set("Strom", 2);
 typeMap.set("Strom", 3);
 
 // open addEntry window
+/*
 let btnCreateEntry = document.getElementById("btnCreateEntry");
 btnCreateEntry.addEventListener("click", () => {
     ipcRenderer.send("openAddEntryWindow");
 });
+*/
 
 // create entry in table
 ipcRenderer.on('entry:add', function (e, entry) {
@@ -96,19 +88,36 @@ ipcRenderer.on('entry:add', function (e, entry) {
     tbody.innerHTML += htmlString;
 });
 
-//Insert entry into database
-function insertDatabase(tableName, paramName, values) {
-    let query = `INSERT INTO ${mysql.escape(tableName)} (${mysql.escape(paramName.join())}) VALUES (${mysql.escape(values.join())})`;
-    console.log(query);
+function addTableEntry() {
+    //create database entry
+    let tableName = "zählerstand";
+    let counterType = typeMap.get(entry.type);
 
-    connection.query(query, (err, result) => {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        }
-        console.log("Query succesfully executed");
-    });
+    let paramName = ["zählernummer", "datum", "verbrauch", "zählertyp_id"];
+    let values = [entry.counterNr, entry.date, entry.amount, counterType];
+
+    insertDatabase(tableName, paramName, values);
+
+    // get reference to wanted table
+    let tbody;
+    console.log(entry);
+    if (entry.type === "Wasser") {
+        tbody = document.getElementById("tbodyWasser");
+    } else if (entry.type === "Strom") {
+        tbody = document.getElementById("tbodyStrom");
+    } else if (entry.type === "Gas") {
+        tbody = document.getElementById("tbodyGas");
+    } else {
+        console.log("No tbody found");
+    }
+
+    // create table row
+    let editBtn = `<button class="btn-small waves-effect waves-light teal lighten-2">
+                        <i class="material-icons">mode_edit</i>
+                    </button>`;
+
+    let htmlString = `<tr><td>${entry.counterNr}</td><td>${entry.date}</td><td>${entry.amount}</td><td>${editBtn}</td></tr>`;
+    tbody.innerHTML += htmlString;
 }
 
 function initInputStyle() {
@@ -132,7 +141,6 @@ let collapsibleState = new Map(); //[Key: HTML Node, Value: Boolean]; Open: True
 Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
     collapsibleState.set(element, false);
 });
-console.log(collapsibleState);
 
 //unfold all collapsible
 $("#unfoldAllCollapse").on("click", () => {
@@ -202,4 +210,20 @@ $("#closeModal").on("click", () => {
     });
     //clear select
     document.getElementById("modalAddEntry").querySelector("select").selectedIndex = 0;
+});
+
+//brauchwasser calculation
+$("#preisBrauchwasser").on("change", () => {
+    //Dummy; must be substituted with values from database
+    let waterVolume = 100;
+    let days = 200;
+
+    //calc statistics
+    $("#tageSeit").val(days);
+    $("#tageBis").val(365 - days);
+    $("#avgVerbrauch").val(waterVolume / days);
+
+    //calc final price
+    let price = $("#preisBrauchwasser").val();
+    $("#brauchwasserGebühr").text(waterVolume * price + "€");
 });

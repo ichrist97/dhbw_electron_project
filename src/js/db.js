@@ -15,28 +15,6 @@ $(document).ready(() => {
     loadExistingData();
 });
 
-function addEntry(tableName, paramName, values) {
-    connection.connect((err) => {
-        if (err) throw err;
-
-        let query = `INSERT INTO ${tableName} (${paramName.join()}) VALUES (${values.join()})`;
-        console.log(query);
-
-        connection.query(query, (err, result) => {
-            if (err) {
-                console.log("An error ocurred performing the query.");
-                console.log(err);
-                return;
-            }
-            console.log("Query succesfully executed");
-        });
-
-        connection.end(() => {
-            console.log("Connection closed");
-        });
-    });
-}
-
 function loadExistingData() {
     connection.connect((err) => {
         if (err) throw err;
@@ -60,7 +38,7 @@ function loadExistingData() {
                 let zählertyp = row.name;
                 let zählernummer = row.zählernummer;
                 let datum = row.datum;
-                let verbrauch = row.verbrauch;
+                let verbrauch = String(row.verbrauch).replace(".", ",");
                 let entry = `<tr><td>${zählernummer}</td><td>${datum}</td><td>${verbrauch}</td></tr>`;
 
                 switch (zählertyp) {
@@ -83,5 +61,20 @@ function loadExistingData() {
         connection.end(() => {
             console.log("Connection closed");
         });
+    });
+}
+
+//Insert entry into database
+function insertDatabase(tableName, paramName, values) {
+    let query = `INSERT INTO ${mysql.escape(tableName)} (${mysql.escape(paramName.join())}) VALUES (${mysql.escape(values.join())})`;
+    console.log(query);
+
+    connection.query(query, (err, result) => {
+        if (err) {
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        console.log("Query succesfully executed");
     });
 }
