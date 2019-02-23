@@ -1,12 +1,3 @@
-/* Swipeable tabs fix */
-.tabs-content.carousel.carousel-slider .carousel-item.active {
-    position: relative;
-}
-
-.tabs-content.carousel.carousel-slider {
-    height: auto !important;
-}
-
 .thead-border {
     border-bottom: 2pt;
     border-bottom-style: solid;
@@ -157,6 +148,25 @@ table .btn-small {
     border-radius: 5pt;
     color: #FFF;
     width: auto;
+}
+
+/* Hoverable fab tip */
+.hover-fab-tip {
+    position: fixed;
+    bottom: 24pt;
+    right: 70pt;
+    padding: 0pt 0.5rem;
+    text-align: right;
+    background-color: #323232;
+    border-radius: 5pt;
+    color: #FFF;
+    width: auto;
+    display: none;
+}
+
+/* Show hover-fab-tip when hovering */
+.btn-floating:hover+.hover-fab-tip {
+    display: block;
 }
 
 /* Floating accessory buttons of the main floating button */

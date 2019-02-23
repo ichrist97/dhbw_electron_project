@@ -19,7 +19,7 @@ $(document).ready(() => {
     //init tabs
     let elemsTabs = document.querySelectorAll(".tabs");
     let instanceTabs = M.Tabs.init(elemsTabs, {
-        swipeable: true
+        swipeable: false
     });
 
     //$('.tabs-content.carousel.carousel-slider').css("height", "auto");
@@ -138,14 +138,15 @@ Array.from(document.getElementsByClassName("collapsible-header")).forEach((eleme
     collapsibleState.set(element, false);
 });
 
-
 //unfold all collapsible
-//$("#unfoldAllCollapsibleFinance").on("click", unfoldCollapsible("#finanzen"));
 $("#unfoldAllCollapsibleFinance").on("click", () => {
     unfoldCollapsible("#finanzen");
 });
 $("#unfoldAllCollapsibleTable").on("click", () => {
     unfoldCollapsible("#data");
+});
+$("#unfoldAllCollapsibleContract").on("click", () => {
+    unfoldCollapsible("#vertrag");
 });
 //close all collapsible
 $("#closeAllCollapsibleFinance").on("click", () => {
@@ -153,6 +154,9 @@ $("#closeAllCollapsibleFinance").on("click", () => {
 });
 $("#closeAllCollapsibleTable").on("click", () => {
     closeCollapsible("#data");
+});
+$("#closeAllCollapsibleContract").on("click", () => {
+    closeCollapsible("#vertrag");
 });
 
 function unfoldCollapsible(tabTargetId) {
@@ -174,6 +178,11 @@ function closeCollapsible(tabTargetId) {
         }
     });
 }
+
+//tab verträge btnCreateContract
+$("#btnCreateContract").on("click", () => {
+    console.log("add contract")
+});
 
 //change icon of collapsible when opening or closing
 Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
@@ -209,8 +218,8 @@ $("#type").on("change", (event) => {
     }
 });
 
-//clear modal when closing it
-$("#closeModal").on("click", () => {
+//clear modalAddEntry when closing it
+$("#closeModalEntry").on("click", () => {
     console.log("modal closed")
     //clear inputs
     let inputs = document.getElementById("modalAddEntry").querySelectorAll("input");
@@ -235,4 +244,17 @@ $("#preisBrauchwasser").on("change", () => {
     //calc final price
     let price = $("#preisBrauchwasser").val();
     $("#brauchwasserGebühr").text(waterVolume * price + "€");
+});
+
+//clear all inputs in finanzstatus
+$("#resetForm").on("click", () => {
+    let inputs = document.querySelector("#finanzen").getElementsByTagName("input");
+    Array.from(inputs).forEach((element) => {
+        element.value = "";
+    });
+
+    let gebühren = document.querySelector("#finanzen").querySelectorAll(".gebühr");
+    Array.from(gebühren).forEach((element) => {
+        element.innerHTML = "";
+    });
 });

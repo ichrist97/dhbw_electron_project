@@ -16,9 +16,10 @@
     <div class="row">
         <div id="tabRow" class="col s12">
             <ul class="tabs z-depth-1">
-                <li class="tab col s4 grey darken-4"><a class="white-text" href="#data">Zählerstände</a></li>
-                <li class="tab col s4 grey darken-4"><a class="active white-text" href="#dashboard">Dashboard</a></li>
-                <li class="tab col s4 grey darken-4"><a class="white-text" href="#finanzen">Finanzen</a></li>
+                <li class="tab col s3 grey darken-4"><a class="white-text" href="#data">Zählerstände</a></li>
+                <li class="tab col s3 grey darken-4"><a class="active white-text" href="#dashboard">Dashboard</a></li>
+                <li class="tab col s3 grey darken-4"><a class="white-text" href="#vertrag">Verträge</a></li>
+                <li class="tab col s3 grey darken-4"><a class="white-text" href="#finanzen">Finanzstatus</a></li>
             </ul>
         </div>
 
@@ -129,6 +130,7 @@
 
         </div>
 
+        <!-- Dashboard Tab content-->
         <div id="dashboard" class="col s12 tabContent">
             <div class="container">
                 <h4>Wasser</h4>
@@ -144,6 +146,57 @@
                 <h4>Gas</h4>
                 <canvas id="gasChart"></canvas>
             </div>
+        </div>
+
+        <!-- Verträge tab content -->
+        <div id="vertrag" class="col s12 tabContent">
+            <div class="container">
+                <ul class="collapsible expandable z-depth-1">
+                    <!-- Strom Vertrag -->
+                    <li>
+                        <div class="collapsible-header teal lighten-2 white-text valign-wrapper">
+                            <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
+                            <h5><i class="large material-icons">power</i>Strom</h5>
+                        </div>
+                        <div class="collapsible-body">
+
+                        </div>
+                    </li>
+                    <!-- Gas Vertrag -->
+                    <li>
+                        <div class="collapsible-header teal lighten-2 white-text valign-wrapper">
+                            <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
+                            <h5><i class="large material-icons">cloud</i>Gas</h5>
+                        </div>
+                        <div class="collapsible-body">
+
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!--Floating Action Button-->
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large teal lighten-2 z-depth-2 waves-effect waves-light">
+                    <i class="large material-icons">menu</i>
+                </a>
+                <ul>
+                    <li>
+                        <a href="#modalAddContract" id="addContract" class="btn-floating floating-acc-btn modal-trigger"><i
+                                class="material-icons">add</i></a>
+                        <a class="btn-floating mobile-fab-tip">Neuen Vertrag erstellen</a>
+                    </li>
+                    <li>
+                        <a id="unfoldAllCollapsibleContract" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
+                        <a class="btn-floating mobile-fab-tip">Alles aufklappen</a>
+                    </li>
+                    <li>
+                        <a id="closeAllCollapsibleContract" class="btn-floating floating-acc-btn lighten-1"><i class="material-icons">unfold_less</i></a>
+                        <a class="btn-floating mobile-fab-tip">Alles schließen</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
 
         <div id="finanzen" class="col s12 tabContent">
@@ -212,7 +265,7 @@
                                 <!--Bruttosumme-->
                                 <h6>Brutto Brauchwassergebühr</h6>
                                 <hr>
-                                <h6 class="gebühr"></h6>
+                                <h6 id="bruttoBrauchwasser" class="final-gebühr"></h6>
                                 <br>
                             </div>
 
@@ -288,7 +341,7 @@
                                 <br>
                                 <h6>Stromsteuergebühr</h6>
                                 <hr>
-                                <h6 id="stromGebühr" class="gebühr"></h6>
+                                <h6 id="stromsteuerGebühr" class="gebühr"></h6>
                             </div>
 
                             <!--Servicepauschale-->
@@ -403,6 +456,12 @@
                 </a>
                 <ul>
                     <li>
+                        <a href="#modalEmptyForm" id="emptyForm" class="btn-floating floating-acc-btn modal-trigger">
+                            <i class="material-icons">delete</i>
+                        </a>
+                        <a class="btn-floating mobile-fab-tip">Eingaben zurücksetzen</a>
+                    </li>
+                    <li>
                         <a id="unfoldAllCollapsibleFinance" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
                         <a class="btn-floating mobile-fab-tip">Alles aufklappen</a>
                     </li>
@@ -420,7 +479,7 @@
     <div id="modalAddEntry" class="modal">
         <div class="modal-content">
             <!--Header-->
-            <h4>Neuen Zählerstand eintragen...</h4>
+            <h4>Neuen Zählerstand eintragen</h4>
             <hr>
             <!--Content-->
             <div class="container">
@@ -450,14 +509,49 @@
         </div>
         <hr style="width:95%;">
         <div class="modal-footer">
-            <a id="closeModal" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
+            <a id="closeModalEntry" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
             <a id="addEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Eintragen</a>
+        </div>
+    </div>
+
+    <!-- Modal Add Contract -->
+    <div id="modalAddContract" class="modal">
+        <div class="modal-content">
+            <!--Header-->
+            <h4>Neuen Verstag erstellen</h4>
+            <hr>
+            <!--Content-->
+            <div class="container">
+
+            </div>
+        </div>
+        <hr style="width:95%;">
+        <div class="modal-footer">
+            <a id="closeModalContract" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
+            <a id="createContract" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Erstellen</a>
+        </div>
+    </div>
+
+    <!-- Modal Empty Form -->
+    <div id="modalEmptyForm" class="modal" style="width:400pt;">
+        <div class="modal-content">
+            <!--Header-->
+            <h4>Sind sie sicher?</h4>
+            <hr>
+            <!--Content-->
+            <h6>Alle Eingaben werden zurückgesetzt</h6>
+        </div>
+        <hr style="width:90%;">
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
+            <a id="resetForm" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Zurücksetzen</a>
         </div>
     </div>
 
     <script src="../js/materialize.min.js"></script>
     <script src="../js/db.js"></script>
     <script src="../js/index.js"></script>
+    <script src="../js/formHandling.js"></script>
     <script src="../js/charts.js"></script>
 
 </body>
