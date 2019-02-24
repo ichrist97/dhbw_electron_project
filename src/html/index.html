@@ -41,6 +41,7 @@
                                         <th>Zählernummer</th>
                                         <th>Datum</th>
                                         <th>Verbrauch</th>
+                                        <th>Preis pro Einheit</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -67,6 +68,7 @@
                                         <th>Zählernummer</th>
                                         <th>Datum</th>
                                         <th>Verbrauch</th>
+                                        <th>Preis pro Einheit</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -90,6 +92,7 @@
                                         <th>Zählernummer</th>
                                         <th>Datum</th>
                                         <th>Verbrauch</th>
+                                        <th>Preis pro Einheit</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -109,13 +112,9 @@
                 </a>
                 <ul>
                     <li>
-                        <a href="#modalAddEntry" id="addEntry" class="btn-floating floating-acc-btn modal-trigger"><i
+                        <a href="#modalAddEntry" nnid="addEntry" class="btn-floating floating-acc-btn modal-trigger"><i
                                 class="material-icons">add</i></a>
                         <a class="btn-floating mobile-fab-tip">Neuen Zählerstand eintragen</a>
-                    </li>
-                    <li>
-                        <a class="btn-floating floating-acc-btn"><i class="material-icons">refresh</i></a>
-                        <a class="btn-floating mobile-fab-tip">Datenbestand aktualisieren</a>
                     </li>
                     <li>
                         <a id="unfoldAllCollapsibleTable" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
@@ -151,31 +150,39 @@
         <!-- Verträge tab content -->
         <div id="vertrag" class="col s12 tabContent">
             <div class="container">
-                <ul class="collapsible expandable z-depth-1">
-                    <!-- Strom Vertrag -->
-                    <li>
-                        <div class="collapsible-header teal lighten-2 white-text valign-wrapper">
-                            <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
-                            <h5><i class="large material-icons">power</i>Strom</h5>
+                <div class="div-border z-depth-1">
+                    <h4>Strom</h4>
+                    <hr>
+                    <div class="div-border z-depth-1">
+                        <div class="input-field">
+                            <h6>Stichtag</h6>
+                            <input id="stichtagStrom" type="text" class="input-short datepicker">
                         </div>
-                        <div class="collapsible-body">
-
+                        <div class="input-field">
+                            <h6>Soll-Kapazität in [kWh]</h6>
+                            <input id="sollStrom" type="number" class="input-short">
                         </div>
-                    </li>
-                    <!-- Gas Vertrag -->
-                    <li>
-                        <div class="collapsible-header teal lighten-2 white-text valign-wrapper">
-                            <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
-                            <h5><i class="large material-icons">cloud</i>Gas</h5>
+                    </div>
+                </div>
+                <br>
+                <div class="div-border z-depth-1">
+                    <h4>Gas</h4>
+                    <hr>
+                    <div class="div-border z-depth-1">
+                        <div class="input-field">
+                            <h6>Stichtag</h6>
+                            <input id="stichtagGas" type="text" class="input-short datepicker">
                         </div>
-                        <div class="collapsible-body">
-
+                        <div class="input-field">
+                            <h6>Soll-Kapazität in [m³]</h6>
+                            <input id="sollGas" type="number" class="input-short">
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </div>
 
             <!--Floating Action Button-->
+            <!--
             <div class="fixed-action-btn">
                 <a class="btn-floating btn-large teal lighten-2 z-depth-2 waves-effect waves-light">
                     <i class="large material-icons">menu</i>
@@ -196,6 +203,7 @@
                     </li>
                 </ul>
             </div>
+            -->
 
         </div>
 
@@ -379,7 +387,7 @@
                             <h5><i class="material-icons white-text">keyboard_arrow_down</i></h5>
                             <h5 class="white-text"><i class="large material-icons">cloud</i>Gas</h5>
                         </div>
-                        <div class="collapsible-body z-depth-1 active">
+                        <div id="gasFinanzen" class="collapsible-body z-depth-1 active">
 
                             <!--Arbeitspreis-->
                             <div class="div-border z-depth-1">
@@ -395,7 +403,7 @@
                                 <input id="brennwert" class="input-short center-align" type="number">
                                 <br>
                                 <label class="black-text" for="energievolumen">Energie [kWh] berechnet aus Gasvolumen</label>
-                                <input id="energievolument" class="input-short input-readonly center-align" type="number"
+                                <input id="energievolumen" class="input-short input-readonly center-align" type="number"
                                     readonly>
                                 <br>
                                 <label class="black-text" for="preisGas">Preis [€] pro [kWh]</label>
@@ -494,7 +502,7 @@
                 </div>
                 <div class="input-field">
                     <label for="zählernummer" class="teal-text lighten-2">Zählernummer</label>
-                    <input id="zählernummer" type="number">
+                    <input id="zählernummer" type="number" min="0">
                 </div>
                 <div class="input-field">
                     <label for="datum" class="teal-text lighten-2">Datum</label>
@@ -502,7 +510,11 @@
                 </div>
                 <div class="input-field">
                     <label id="verbrauchLabel" for="verbrauch" class="teal-text lighten-2">Verbrauch</label>
-                    <input id="verbrauch" type="number">
+                    <input id="verbrauch" type="number" min="0">
+                </div>
+                <div class="input-field">
+                    <label for="preisProEinheit" class="teal-text lighten-2">Preis pro Einheit</label>
+                    <input id="preisProEinheit" type="number" min="0">
                 </div>
             </div>
 
@@ -510,7 +522,50 @@
         <hr style="width:95%;">
         <div class="modal-footer">
             <a id="closeModalEntry" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
-            <a id="addEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Eintragen</a>
+            <a id="btnAddEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Eintragen</a>
+        </div>
+    </div>
+
+    <!-- Modal Edit Entry -->
+    <div id="modalEditEntry" class="modal">
+        <div class="modal-content">
+            <!--Header-->
+            <h4>Zählerstand verändern</h4>
+            <hr>
+            <!--Content-->
+            <div class="container">
+                <label for="type" class="teal-text lighten-2">Typ</label>
+                <div class="input-field">
+                    <select id="newType">
+                        <option value="" disabled selected>Wähle deine Option</option>
+                        <option value="Wasser">Wasser</option>
+                        <option value="Strom">Strom</option>
+                        <option value="Gas">Gas</option>
+                    </select>
+                </div>
+                <div class="input-field">
+                    <label for="newZählernummer" class="teal-text lighten-2">Zählernummer</label>
+                    <input id="newZählernummer" type="number" min="0">
+                </div>
+                <div class="input-field">
+                    <label for="newDatum" class="teal-text lighten-2">Datum</label>
+                    <input id="newDatum" type="text" class="datepicker">
+                </div>
+                <div class="input-field">
+                    <label id="newVerbrauchLabel" for="verbrauch" class="teal-text lighten-2">Verbrauch</label>
+                    <input id="newVerbrauch" type="number" min="0">
+                </div>
+                <div class="input-field">
+                    <label for="newPreisProEinheit" class="teal-text lighten-2">Preis pro Einheit</label>
+                    <input id="newPreisProEinheit" type="number" min="0">
+                </div>
+            </div>
+
+        </div>
+        <hr style="width:95%;">
+        <div class="modal-footer">
+            <a id="closeModalEditEntry" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
+            <a id="btnEditEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Eintragen</a>
         </div>
     </div>
 

@@ -22,22 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-$(document).ready(() => {
-    console.log("ready")
-    //init materialize
-
-
-    /*
-    //init datepicker
-    $('.datepicker').datepicker({
-        format: "dd-mm-yyyy"
-    });
-
-    //init select
-    $('select').formSelect();
-    */
-});
-
 // submit form
 let btnSubmit = document.getElementById("btnSubmit");
 btnSubmit.addEventListener("click", (e) => {

@@ -14,9 +14,8 @@ valuePresence.set("wasserGrundgebühr", false);
 
 //brauchwasser calculation
 $("#preisBrauchwasser").on("change", () => {
-    //Dummy; must be substituted with values from database
-    let waterVolume = 100;
-    let days = 200;
+    let waterVolume = 0; //missing select statement
+    let days = 200; //missing select statement
 
     //calc statistics
     $("#tageSeit").val(days);
@@ -194,4 +193,103 @@ function displayStromSum() {
     $("#ustStrom").val(ust);
     let bruttoSum = nettoSum + ust;
     $("#bruttoStrom").html(bruttoSum.toFixed(2));
+}
+
+/*
+ * Gas 
+ */
+//arbeitspreis
+let arbeitspreisIds = ["zustandszahl", "brennwert", "preisGas"];
+let gasGebührenIds = [];
+Array.from(document.querySelector("#gasFinanzen").getElementsByClassName("gebühr")).forEach((element) => {
+    gasGebührenIds.push(element.id);
+});
+
+//add listener for each input field to trigger the total sum of arbeitspreis
+arbeitspreisIds.forEach((id) => {
+    $(`#${id}`).on("change", () => {
+        if (valuesArePresent(arbeitspreisIds)) {
+            displayArbeitspreis();
+        }
+    });
+});
+
+function displayArbeitspreis() {
+    let gasverbrauch = parseFloat($("#gasverbrauch").val()); //missing select
+    gasverbrauch = 1; //dummy
+    let zustandszahl = parseFloat($("#zustandszahl").val());
+    let brennwert = parseFloat($("#brennwert").val());
+    let preisGas = parseFloat($("#preisGas").val());
+    let energieVolumen = zustandszahl * brennwert * gasverbrauch;
+    $("#energievolumen").val(energieVolumen);
+    let arbeitspreis = energieVolumen * preisGas;
+    $("#arbeitspreisGebühr").html(arbeitspreis.toFixed(2));
+}
+
+//grundpreis
+$("#grundpreisJahr").on("change", () => {
+    $("#grundpreisGebühr").html($("#grundpreisJahr").val());
+});
+
+//erdgassteuer
+$("#erdgassteuer").on("change", () => {
+    let steuer = parseFloat($("#erdgassteuer").val());
+    let verbrauch = parseFloat($("#energievolumen").val());
+    let erg = steuer * verbrauch;
+    $("#erdgassteuerGebühr").html(erg.toFixed(2));
+
+    //display total sum of gas
+    if (valuesArePresent(gasGebührenIds)) {
+        displayTotalGasSum(gasGebührenIds);
+    }
+});
+
+function displayTotalGasSum(gasGebührenIds) {
+    let netto = 0;
+    gasGebührenIds.forEach((id) => {
+        netto += parseFloat($(`#${id}`).html());
+    });
+    console.log(netto);
+    $("#nettoGas").val(netto.toFixed(2));
+    let ust = netto * 0.19;
+    $("#ustGas").val(ust);
+    let brutto = netto + ust;
+    $("#bruttoGas").html(brutto);
+}
+
+
+function valuesArePresent(elementIds) {
+    let tagName = $(`#${elementIds[0]}`).prop("tagName");
+    /*
+     * determines whether the user input of the fields are empty or not
+     * when an empty field gets found the function returns false
+     */
+    switch (tagName.toLowerCase()) {
+        case "input":
+            for (let i = 0; i < elementIds.length; i++) {
+                let empty = isEmpty($(`#${elementIds[i]}`).val());
+                if (empty) {
+                    return false;
+                }
+            }
+            break;
+        case "h6":
+            for (let i = 0; i < elementIds.length; i++) {
+                let empty = isEmpty($(`#${elementIds[i]}`).html());
+                if (empty) {
+                    return false;
+                }
+            }
+            break;
+        default:
+            for (let i = 0; i < elementIds.length; i++) {
+                let empty = isEmpty($(`#${elementIds[i]}`).html());
+                if (empty) {
+                    return false;
+                }
+            }
+            break;
+    }
+    //if the function reaches this point all fields are not empty
+    return true;
 }

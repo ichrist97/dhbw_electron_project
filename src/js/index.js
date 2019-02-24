@@ -22,8 +22,6 @@ $(document).ready(() => {
         swipeable: false
     });
 
-    //$('.tabs-content.carousel.carousel-slider').css("height", "auto");
-
     //init fixed action button
     let elemsFixedBtn = document.querySelectorAll('.fixed-action-btn');
     let instanceFixedBtn = M.FloatingActionButton.init(elemsFixedBtn, {});
@@ -42,79 +40,6 @@ $(document).ready(() => {
         format: "dd.mm.yyyy"
     });
 });
-
-//Mapping of counter types to related foreign key id in database
-const typeMap = new Map();
-typeMap.set("Wasser", 1);
-typeMap.set("Strom", 2);
-typeMap.set("Strom", 3);
-
-// create entry in table
-/*
-ipcRenderer.on('entry:add', function (e, entry) {
-    //create database entry
-    let tableName = "zählerstand";
-    let counterType = typeMap.get(entry.type);
-
-    let paramName = ["zählernummer", "datum", "verbrauch", "zählertyp_id"];
-    let values = [entry.counterNr, entry.date, entry.amount, counterType];
-
-    insertDatabase(tableName, paramName, values);
-
-    // get reference to wanted table
-    let tbody;
-    console.log(entry);
-    if (entry.type === "Wasser") {
-        tbody = document.getElementById("tbodyWasser");
-    } else if (entry.type === "Strom") {
-        tbody = document.getElementById("tbodyStrom");
-    } else if (entry.type === "Gas") {
-        tbody = document.getElementById("tbodyGas");
-    } else {
-        console.log("No tbody found");
-    }
-
-    // create table row
-    let editBtn = `<button class="btn-small waves-effect waves-light teal lighten-2">
-                        <i class="material-icons">mode_edit</i>
-                    </button>`;
-
-    let htmlString = `<tr><td>${entry.counterNr}</td><td>${entry.date}</td><td>${entry.amount}</td><td>${editBtn}</td></tr>`;
-    tbody.innerHTML += htmlString;
-});
-*/
-
-function addTableEntry() {
-    //create database entry
-    let tableName = "zählerstand";
-    let counterType = typeMap.get(entry.type);
-
-    let paramName = ["zählernummer", "datum", "verbrauch", "zählertyp_id"];
-    let values = [entry.counterNr, entry.date, entry.amount, counterType];
-
-    insertDatabase(tableName, paramName, values);
-
-    // get reference to wanted table
-    let tbody;
-    console.log(entry);
-    if (entry.type === "Wasser") {
-        tbody = document.getElementById("tbodyWasser");
-    } else if (entry.type === "Strom") {
-        tbody = document.getElementById("tbodyStrom");
-    } else if (entry.type === "Gas") {
-        tbody = document.getElementById("tbodyGas");
-    } else {
-        console.log("No tbody found");
-    }
-
-    // create table row
-    let editBtn = `<button class="btn-small waves-effect waves-light teal lighten-2">
-                        <i class="material-icons">mode_edit</i>
-                    </button>`;
-
-    let htmlString = `<tr><td>${entry.counterNr}</td><td>${entry.date}</td><td>${entry.amount}</td><td>${editBtn}</td></tr>`;
-    tbody.innerHTML += htmlString;
-}
 
 function initInputStyle() {
     //change style of all readonly inputs to seperate them visually from the normal inputs
