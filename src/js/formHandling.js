@@ -23,6 +23,7 @@ $("#selectPeriod").on("click", () => {
         $("#periodLength").text(periodLength);
         pullDataForWater();
         pullDataForPower();
+        pullDataForGas();
     }
 });
 
@@ -341,65 +342,145 @@ function displayTotalPowerFee() {
 /*
  * Gas 
  */
-//arbeitspreis
-let arbeitspreisIds = ["zustandszahl", "brennwert", "preisGas"];
-let gasGebührenIds = [];
-Array.from(document.querySelector("#gasFinanzen").getElementsByClassName("gebühr")).forEach((element) => {
-    gasGebührenIds.push(element.id);
-});
+function pullDataForGas() {
+    let begin = $("#zeitraumVon").val();
+    let end = $("#zeitraumBis").val();
+    let formatDateBegin = formatDataForSQL(begin);
+    let formatDateEnd = formatDataForSQL(end);
+    formatDateBegin = mysql.escape(formatDateBegin);
+    formatDateEnd = mysql.escape(formatDateEnd);
 
-//add listener for each input field to trigger the total sum of arbeitspreis
-arbeitspreisIds.forEach((id) => {
-    $(`#${id}`).on("change", () => {
-        if (valuesArePresent(arbeitspreisIds)) {
-            displayArbeitspreis();
+    //type
+    let typeId = 3;
+    typeId = mysql.escape(typeId);
+
+    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`
+    console.log(query);
+
+    connection.query(query, (err, result) => {
+        if (err) {
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
         }
-    });
-});
 
-function displayArbeitspreis() {
-    let gasverbrauch = parseFloat($("#gasverbrauch").val()); //missing select
-    gasverbrauch = 1; //dummy
-    let zustandszahl = parseFloat($("#zustandszahl").val());
-    let brennwert = parseFloat($("#brennwert").val());
-    let preisGas = parseFloat($("#preisGas").val());
-    let energieVolumen = zustandszahl * brennwert * gasverbrauch;
-    $("#energievolumen").val(energieVolumen);
-    let arbeitspreis = energieVolumen * preisGas;
-    $("#arbeitspreisGebühr").html(arbeitspreis.toFixed(2));
+        //set data in form
+        let gasVolume = 0;
+        let priceSum = 0;
+        let resultLength = Array.from(result).length;
+
+        //loop through data
+        Array.from(result).forEach((row) => {
+            gasVolume += row.verbrauch;
+            priceSum += row.preisProEinheit;
+        });
+
+        //price average
+        let priceAvg = priceSum / resultLength;
+        //convert price from cent to euro
+        priceAvg /= 100;
+        $("#priceGas").text(priceAvg.toFixed(2));
+        //volume average
+        let volumeAvg = gasVolume / periodLength;
+        $("#avgVolumeGas").text(volumeAvg.toFixed(2));
+        //set volume
+        $("#volumeGas").text(gasVolume);
+    });
 }
 
-//grundpreis
-$("#grundpreisJahr").on("change", () => {
-    $("#grundpreisGebühr").html($("#grundpreisJahr").val());
+//useGas
+function useGasParamsPresent() {
+    if (isEmpty($("#stateNum").val())) {
+        return false;
+    }
+    if (isEmpty($("#burnValue").val())) {
+        return false;
+    }
+    return true;
+}
+
+$("#stateNum").on("change", () => {
+    if (useGasParamsPresent()) {
+        displayUseGasFee();
+    }
 });
-
-//erdgassteuer
-$("#erdgassteuer").on("change", () => {
-    let steuer = parseFloat($("#erdgassteuer").val());
-    let verbrauch = parseFloat($("#energievolumen").val());
-    let erg = steuer * verbrauch;
-    $("#erdgassteuerGebühr").html(erg.toFixed(2));
-
-    //display total sum of gas
-    if (valuesArePresent(gasGebührenIds)) {
-        displayTotalGasSum(gasGebührenIds);
+$("#burnValue").on("change", () => {
+    if (useGasParamsPresent()) {
+        displayUseGasFee();
     }
 });
 
-function displayTotalGasSum(gasGebührenIds) {
-    let netto = 0;
-    gasGebührenIds.forEach((id) => {
-        netto += parseFloat($(`#${id}`).html());
-    });
-    console.log(netto);
-    $("#nettoGas").val(netto.toFixed(2));
-    let ust = netto * 0.19;
-    $("#ustGas").val(ust.toFixed(2));
-    let brutto = netto + ust;
-    $("#bruttoGas").html(brutto.toFixed(2));
+function displayUseGasFee() {
+    let stateNum = parseFloat($("#stateNum").val());
+    let burnValue = parseFloat($("#burnValue").val());
+    let volume = parseFloat($("#volumeGas").text());
+    let volume_kWh = stateNum * burnValue * volume;
+    $("#calcVolumeGas").text(volume_kWh.toFixed(2));
+    let price = parseFloat($("#priceGas").text());
+    let fee = volume_kWh * price;
+    $("#feeUseGas").text(fee.toFixed(2));
+
+    //display total gas sum
+    if (totalGasParamsPresent()) {
+        displayTotalGasFee();
+    }
 }
 
+//base fee
+$("#baseFeeGas").on("change", () => {
+    let val = $("#baseFeeGas").val();
+    let feePerDay = val / 365;
+    $("#avgBaseFeeGas").text(feePerDay.toFixed(2));
+    let fee = feePerDay * periodLength;
+    $("#feeBaseFeeGas").text(fee.toFixed(2));
+
+    //display total gas sum
+    if (totalGasParamsPresent()) {
+        displayTotalGasFee();
+    }
+});
+
+//gas tax
+$("#taxPerGas").on("change", () => {
+    if (!isEmpty($("#calcVolumeGas").text())) {
+        let val = parseFloat($("#taxPerGas").val());
+        let volume = parseFloat($("#calcVolumeGas").text());
+        let fee = val * volume;
+        $("#feeTaxGas").text(fee.toFixed(2));
+
+        //display total gas sum
+        if (totalGasParamsPresent()) {
+            displayTotalGasFee();
+        }
+    }
+});
+
+function totalGasParamsPresent() {
+    if (isEmpty($("#feeUseGas").text())) {
+        return false;
+    }
+    if (isEmpty($("#feeBaseFeeGas").text())) {
+        return false;
+    }
+    if (isEmpty($("#feeTaxGas").text())) {
+        return false;
+    }
+    return true;
+}
+
+function displayTotalGasFee() {
+    let useGas = parseFloat($("#feeUseGas").text());
+    let base = parseFloat($("#feeBaseFeeGas").text());
+    let taxFee = parseFloat($("#feeTaxGas").text());
+    let net = useGas + base + taxFee;
+    $("#netGas").text(net.toFixed(2));
+    let tax = net * 0.19;
+    $("#taxGas").text(tax.toFixed(2));
+    let gross = net + tax;
+    $("#grossGas").text(gross.toFixed(2));
+    $("#gasValue").text(gross.toFixed(2));
+    updateSidebarTotal();
+}
 
 function valuesArePresent(elementIds) {
     let tagName = $(`#${elementIds[0]}`).prop("tagName");

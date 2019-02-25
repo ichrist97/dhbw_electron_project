@@ -377,66 +377,87 @@
                         <div id="gasFinanzen" class="collapsible-body z-depth-1 active">
 
                             <!--Arbeitspreis-->
-                            <div class="div-border z-depth-1">
+                            <div>
                                 <h5><span class="underline-text-teal">Arbeitspreis</span></h5>
-                                <label class="black-text" for="gasverbrauch">Gasverbrauch in [m³]</label>
-                                <input id="gasverbrauch" class="input-short input-readonly center-align" type="number"
-                                    readonly>
-                                <br>
-                                <label class="black-text" for="zustandszahl">Zustandszahl (laut Anmerkung SWHD)</label>
-                                <input id="zustandszahl" class="input-short center-align" type="number">
-                                <br>
-                                <label class="black-text" for="brennwert">Brennwert [kWh] (laut Anmerkung SWHD)</label>
-                                <input id="brennwert" class="input-short center-align" type="number">
-                                <br>
-                                <label class="black-text" for="energievolumen">Energie [kWh] berechnet aus Gasvolumen</label>
-                                <input id="energievolumen" class="input-short input-readonly center-align" type="number"
-                                    readonly>
-                                <br>
-                                <label class="black-text" for="preisGas">Preis [€] pro [kWh]</label>
-                                <input id="preisGas" class="input-short center-align" type="number">
-                                <br>
+                                <div class="values-inline">
+                                    <h6>Gasverbrauch in [m³]:</h6>
+                                    <h6 id="volumeGas" class="bold"></h6>
+                                </div>
+                                <div class="values-inline">
+                                    <h6>Ø Gasverbrauch [m³] / Tag:</h6>
+                                    <h6 id="avgVolumeGas" class="bold"></h6>
+                                </div>
+                                <div class="values-inline">
+                                    <h6>Zustandszahl:</h6>
+                                    <input id="stateNum" class="input-short center-align" type="number">
+                                </div>
+                                <div class="values-inline">
+                                    <h6>Brennwert:</h6>
+                                    <input id="burnValue" class="input-short center-align" type="number">
+                                </div>
+                                <div class="values-inline">
+                                    <h6>Energie [kWh] berechnet aus Gasvolumen:</h6>
+                                    <h6 id="calcVolumeGas" class="bold" 0></h6>
+                                </div>
+                                <div class="values-inline">
+                                    <h6>Ø Preis [€] / [kWh]:</h6>
+                                    <h6 id="priceGas" class="bold"></h6>
+                                </div>
+                                <hr>
                                 <h6>Arbeitspreisgebühr</h6>
-                                <hr>
-                                <h6 id="arbeitspreisGebühr" class="gebühr"></h6>
-                            </div>
-
-                            <!--Grundpreis-->
-                            <div class="div-border z-depth-1">
-                                <h5><span class="underline-text-teal">Grundpreis</span></h5>
-                                <label class="black-text" for="grundpreisJahr">Grundpreis [€] pro Jahr</label>
-                                <input id="grundpreisJahr" class="input-short center-align" type="number">
-                                <br>
-                                <h6>Grundpreisgebühr</h6>
-                                <hr>
-                                <h6 id="grundpreisGebühr" class="gebühr"></h6>
-                            </div>
-
-                            <!--Erdgassteuer-->
-                            <div class="div-border z-depth-1">
-                                <h5><span class="underline-text-teal">Erdgassteuer</span></h5>
-                                <label class="black-text" for="erdgassteuer">Erdgassteuer [€] pro [kWh]</label>
-                                <input id="erdgassteuer" class="input-short center-align" type="number">
-                                <br>
-                                <h6>Erdgassteuergebühr</h6>
-                                <hr>
-                                <h6 id="erdgassteuerGebühr" class="gebühr"></h6>
+                                <h6 id="feeUseGas" class="gebühr"></h6>
                             </div>
                             <br>
-                            <!--Summe Gaskosten-->
-                            <div class="div-border z-depth-1">
-                                <h5><span class="underline-text-teal">Summe Gaskosten</span></h5>
-                                <label class="black-text" for="nettoGas">Netto Gaskosten</label>
-                                <input id="nettoGas" class="input-short input-readonly center-align" type="number"
-                                    readonly>
-                                <br>
-                                <label class="black-text" for="ustGas">Umsatzsteuer 19%</label>
-                                <input id="ustGas" class="input-short input-readonly center-align" type="number"
-                                    readonly>
-                                <br>
-                                <h6>Brutto Gaskosten</h6>
+                            <br>
+
+                            <!--Grundpreis-->
+                            <div>
+                                <h5><span class="underline-text-teal">Grundpreis</span></h5>
+                                <div class="values-inline">
+                                    <h6>Grundpreis [€]:</h6>
+                                    <input id="baseFeeGas" class="input-short center-align" type="number">
+                                </div>
+                                <div class="values-inline">
+                                    <h6>Ø Grundpreis [€] / Tag:</h6>
+                                    <h6 id="avgBaseFeeGas" class="bold"></h6>
+                                </div>
                                 <hr>
-                                <h5 id="bruttoGas" class="final-gebühr"></h5>
+                                <div>
+                                    <h6>Anteiliger Grundpreis für Abrechnungsperiode:</h6>
+                                    <h6 id="feeBaseFeeGas" class="gebühr"></h6>
+                                </div>
+                            </div>
+                            <br>
+                            <br>
+
+                            <!--Erdgassteuer-->
+                            <div>
+                                <h5><span class="underline-text-teal">Erdgassteuer</span></h5>
+                                <div class="values-inline">
+                                    <h6>Erdgassteuer [€] pro [kWh]:</h6>
+                                    <input id="taxPerGas" class="input-short center-align" type="number">
+                                </div>
+                                <hr>
+                                <h6>Erdgassteuergebühr</h6>
+                                <h6 id="feeTaxGas" class="gebühr"></h6>
+                            </div>
+                            <br>
+                            <br>
+
+                            <!--Sum of gas costs-->
+                            <div>
+                                <h5><span class="underline-text-teal">Summe Gaskosten</span></h5>
+                                <div class="values-inline">
+                                    <h6>Netto Gaskosten:</h6>
+                                    <h6 id="netGas" class="bold"></h6>
+                                </div>
+                                <div class="values-inline">
+                                    <h6>Umsatzsteuer 19%:</h6>
+                                    <h6 id="taxGas" class="bold"></h6>
+                                </div>
+                                <hr>
+                                <h6>Brutto Gaskosten</h6>
+                                <h5 id="grossGas" class="final-gebühr"></h5>
                             </div>
 
                         </div>
