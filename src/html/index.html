@@ -13,7 +13,7 @@
 
 <body>
     <!-- Tabs -->
-    <div class="row">
+    <div class="row page">
         <div id="tabRow" class="col s12">
             <ul class="tabs z-depth-1">
                 <li class="tab col s3 grey darken-4"><a class="white-text" href="#data">Zählerstände</a></li>
@@ -155,12 +155,12 @@
                     <hr>
                     <div class="div-border z-depth-1">
                         <div class="input-field">
-                            <h6>Stichtag</h6>
+                            <h6>Abrechnungs-Stichtag</h6>
                             <input id="stichtagStrom" type="text" class="input-short datepicker">
                         </div>
                         <div class="input-field">
                             <h6>Soll-Kapazität in [kWh]</h6>
-                            <input id="sollStrom" type="number" class="input-short">
+                            <input id="sollStrom" type="number" class="input-short" min="0">
                         </div>
                     </div>
                 </div>
@@ -170,12 +170,12 @@
                     <hr>
                     <div class="div-border z-depth-1">
                         <div class="input-field">
-                            <h6>Stichtag</h6>
+                            <h6>Abrechnungs-Stichtag</h6>
                             <input id="stichtagGas" type="text" class="input-short datepicker">
                         </div>
                         <div class="input-field">
                             <h6>Soll-Kapazität in [m³]</h6>
-                            <input id="sollGas" type="number" class="input-short">
+                            <input id="sollGas" type="number" class="input-short" min="0">
                         </div>
                     </div>
                 </div>
@@ -208,7 +208,10 @@
         </div>
 
         <div id="finanzen" class="col s12 tabContent">
-            <div class="container">
+            <div id="finanzenLeftBar" class="div-border z-depth-1">
+                <h3>Hello</h3>
+            </div>
+            <div id="finanzenMain">
                 <ul class="collapsible expandable z-depth-1">
                     <!--Wasser-->
                     <li>
@@ -456,6 +459,9 @@
                     </li>
                 </ul>
             </div>
+            <div id="finanzenRightBar" class="div-border z-depth-1">
+
+            </div>
 
             <!--Floating Action Button-->
             <div class="fixed-action-btn">
@@ -482,6 +488,25 @@
         </div>
 
     </div>
+
+
+    <!-- Loading Screen -->
+    <!--
+    <div id="loading" class="center valign-wrapper">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        -->
 
     <!-- Modal Add Entry -->
     <div id="modalAddEntry" class="modal">

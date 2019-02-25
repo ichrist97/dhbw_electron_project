@@ -1,3 +1,4 @@
+//wasser dummy
 let ctx = document.getElementById("wasserChart").getContext("2d");
 let myChart = new Chart(ctx, {
     type: 'bar',
@@ -33,5 +34,19 @@ let myChart = new Chart(ctx, {
                 }
             }]
         }
+    }
+});
+
+//gas line chart
+let gasCanvas = document.getElementById("gasChart").getContext("2d");
+var gasLineChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        label: "GasVerbrauch",
+        xAxisId: "Zeit",
+        yAxisId: "Verbrauch",
+    },
+    options: {
+
     }
 });

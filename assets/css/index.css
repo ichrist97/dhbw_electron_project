@@ -174,10 +174,68 @@ table .btn-small {
     background-color: #644d6c;
 }
 
+/* edit button in table */
 .btn-editEntry {
     background-color: #644d6c;
-    height: 35pt;
+    height: 30pt;
     width: 35pt;
+    border-radius: 10pt;
     display: block;
-    border-radius: 50%;
+}
+
+/* Loading Screen */
+#loading {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 300;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(192, 192, 192, 0.75);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#finanzenLeftBar {
+    height: 100%;
+    /* Full-height: remove this if you want "auto" height */
+    width: 160px;
+    /* Set the width of the sidebar */
+    position: fixed;
+    /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1;
+    /* Stay on top */
+    top: 0;
+    /* Stay at the top */
+    left: 0;
+    background-color: #FFF;
+    /* Black */
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+#finanzenRightBar {
+    height: 100%;
+    /* Full-height: remove this if you want "auto" height */
+    width: 160px;
+    /* Set the width of the sidebar */
+    position: fixed;
+    /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1;
+    /* Stay on top */
+    top: 0;
+    /* Stay at the top */
+    right: 0;
+    background-color: #FFF;
+    /* Black */
+    overflow-x: hidden;
+    /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+#finanzenMain {
+    margin-left: 160px;
+    padding: 0px 10px;
 }

@@ -65,7 +65,7 @@ function displayBrauchwasserSum() {
     $("#ustBrauchwasser").val(ust);
     //brutto
     let brutto = sum + ust;
-    $("#bruttoBrauchwasser").html(brutto);
+    $("#bruttoBrauchwasser").html(brutto.toFixed(2));
 
     //total water gebühr
     if (areWaterGebührenPresent()) {
@@ -252,9 +252,9 @@ function displayTotalGasSum(gasGebührenIds) {
     console.log(netto);
     $("#nettoGas").val(netto.toFixed(2));
     let ust = netto * 0.19;
-    $("#ustGas").val(ust);
+    $("#ustGas").val(ust.toFixed(2));
     let brutto = netto + ust;
-    $("#bruttoGas").html(brutto);
+    $("#bruttoGas").html(brutto.toFixed(2));
 }
 
 
