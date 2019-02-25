@@ -7,27 +7,6 @@ const browserWindow = electron.remote.BrowserWindow;
 // Jquery setup
 window.$ = window.jQuery = require('jquery');
 
-/*
-//loading screen
-function onReady(callback) {
-    var intervalId = window.setInterval(function () {
-        if (document.getElementsByTagName('body')[0] !== undefined) {
-            window.clearInterval(intervalId);
-            callback.call(this);
-        }
-    }, 1000);
-}
-
-function setVisible(selector, visible) {
-    document.querySelector(selector).style.display = visible ? 'block' : 'none';
-}
-
-onReady(function () {
-    setVisible('.page', true);
-    setVisible('#loading', false);
-});
-*/
-
 $(document).ready(() => {
     initInputStyle();
 
@@ -61,6 +40,44 @@ $(document).ready(() => {
         format: "dd.mm.yyyy"
     });
 });
+
+//Mapping of counter types to related foreign key id in database
+const typeMap = new Map();
+typeMap.set("Wasser", 1);
+typeMap.set("Strom", 2);
+typeMap.set("Strom", 3);
+
+function addTableEntry() {
+    //create database entry
+    let tableName = "zählerstand";
+    let counterType = typeMap.get(entry.type);
+
+    let paramName = ["zählernummer", "datum", "verbrauch", "zählertyp_id"];
+    let values = [entry.counterNr, entry.date, entry.amount, counterType];
+
+    insertDatabase(tableName, paramName, values);
+
+    // get reference to wanted table
+    let tbody;
+    console.log(entry);
+    if (entry.type === "Wasser") {
+        tbody = document.getElementById("tbodyWasser");
+    } else if (entry.type === "Strom") {
+        tbody = document.getElementById("tbodyStrom");
+    } else if (entry.type === "Gas") {
+        tbody = document.getElementById("tbodyGas");
+    } else {
+        console.log("No tbody found");
+    }
+
+    // create table row
+    let editBtn = `<button class="btn-small waves-effect waves-light teal lighten-2">
+                        <i class="material-icons">mode_edit</i>
+                    </button>`;
+
+    let htmlString = `<tr><td>${entry.counterNr}</td><td>${entry.date}</td><td>${entry.amount}</td><td>${editBtn}</td></tr>`;
+    tbody.innerHTML += htmlString;
+}
 
 function initInputStyle() {
     //change style of all readonly inputs to seperate them visually from the normal inputs
@@ -174,22 +191,6 @@ $("#closeModalEntry").on("click", () => {
     });
     //clear select
     document.getElementById("modalAddEntry").querySelector("select").selectedIndex = 0;
-});
-
-//brauchwasser calculation
-$("#preisBrauchwasser").on("change", () => {
-    //Dummy; must be substituted with values from database
-    let waterVolume = 100;
-    let days = 200;
-
-    //calc statistics
-    $("#tageSeit").val(days);
-    $("#tageBis").val(365 - days);
-    $("#avgVerbrauch").val(waterVolume / days);
-
-    //calc final price
-    let price = $("#preisBrauchwasser").val();
-    $("#brauchwasserGebühr").text(waterVolume * price + "€");
 });
 
 //clear all inputs in finanzstatus

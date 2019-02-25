@@ -4,7 +4,7 @@ window.$ = window.jQuery = require('jquery');
 const mysql = require('mysql');
 
 // Add the credentials to access your database
-let connection = mysql.createConnection({
+const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: null,
@@ -93,7 +93,6 @@ $("#btnAddEntry").on("click", () => {
     let query = `INSERT INTO zaehlerstand (${param.join()}) VALUES (${values.join()})`;
     //console.log(query);
 
-    /*
     connection.query(query, values, (err, result) => {
         if (err) {
             console.log("An error ocurred performing the query.");
@@ -102,7 +101,6 @@ $("#btnAddEntry").on("click", () => {
         }
         console.log("Succesfully inserted into database");
     });
-    */
 
     //show in table
     let tbody;
@@ -120,6 +118,10 @@ $("#btnAddEntry").on("click", () => {
     tbody.innerHTML += html;
     //add edit btn to row
     createEditBtn(tbody);
+
+    M.toast({
+        html: 'Zählerstand eingetragen'
+    });
 
     function formatDate(date) {
         let part = date.split(".");

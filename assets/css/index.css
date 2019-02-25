@@ -200,7 +200,7 @@ table .btn-small {
 #finanzenLeftBar {
     height: 100%;
     /* Full-height: remove this if you want "auto" height */
-    width: 160px;
+    width: 180pt;
     /* Set the width of the sidebar */
     position: fixed;
     /* Fixed Sidebar (stay in place on scroll) */
@@ -213,13 +213,13 @@ table .btn-small {
     /* Black */
     overflow-x: hidden;
     /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 40pt;
 }
 
 #finanzenRightBar {
     height: 100%;
     /* Full-height: remove this if you want "auto" height */
-    width: 160px;
+    width: 180pt;
     /* Set the width of the sidebar */
     position: fixed;
     /* Fixed Sidebar (stay in place on scroll) */
@@ -232,10 +232,39 @@ table .btn-small {
     /* Black */
     overflow-x: hidden;
     /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 40pt;
 }
 
 #finanzenMain {
-    margin-left: 160px;
-    padding: 0px 10px;
+    margin-left: 180pt;
+    margin-right: 180pt;
+}
+
+#finanzenMain ul {
+    margin: 0;
+    padding: 0;
+}
+
+#rightBarSum {
+    font-weight: bold;
+}
+
+.tableValue {
+    font-weight: bold;
+}
+
+#periodenAnzTage {
+    font-weight: bold;
+}
+
+.values-inline {
+    padding: 10pt;
+}
+
+.values-inline h6 {
+    display: inline;
+}
+
+.bold {
+    font-weight: bold;
 }
