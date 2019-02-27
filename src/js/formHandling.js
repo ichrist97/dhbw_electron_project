@@ -24,6 +24,9 @@ $("#selectPeriod").on("click", () => {
         pullDataForWater();
         pullDataForPower();
         pullDataForGas();
+
+        //remove blur from div
+        $("#finanzenMain").removeClass("blur");
     }
 });
 
@@ -106,7 +109,7 @@ function pullDataForWater() {
     let typeId = 1;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`
+    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -250,7 +253,7 @@ function pullDataForPower() {
     let typeId = 2;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`
+    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -354,7 +357,7 @@ function pullDataForGas() {
     let typeId = 3;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`
+    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -480,42 +483,6 @@ function displayTotalGasFee() {
     $("#grossGas").text(gross.toFixed(2));
     $("#gasValue").text(gross.toFixed(2));
     updateSidebarTotal();
-}
-
-function valuesArePresent(elementIds) {
-    let tagName = $(`#${elementIds[0]}`).prop("tagName");
-    /*
-     * determines whether the user input of the fields are empty or not
-     * when an empty field gets found the function returns false
-     */
-    switch (tagName.toLowerCase()) {
-        case "input":
-            for (let i = 0; i < elementIds.length; i++) {
-                let empty = isEmpty($(`#${elementIds[i]}`).val());
-                if (empty) {
-                    return false;
-                }
-            }
-            break;
-        case "h6":
-            for (let i = 0; i < elementIds.length; i++) {
-                let empty = isEmpty($(`#${elementIds[i]}`).html());
-                if (empty) {
-                    return false;
-                }
-            }
-            break;
-        default:
-            for (let i = 0; i < elementIds.length; i++) {
-                let empty = isEmpty($(`#${elementIds[i]}`).html());
-                if (empty) {
-                    return false;
-                }
-            }
-            break;
-    }
-    //if the function reaches this point all fields are not empty
-    return true;
 }
 
 function updateSidebarTotal() {

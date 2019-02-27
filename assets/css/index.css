@@ -19,7 +19,7 @@
 }
 
 body .row {
-    padding-top: 60pt;
+    padding-top: 40pt;
 }
 
 /* Border around tables */
@@ -267,4 +267,14 @@ table .btn-small {
 
 .bold {
     font-weight: bold;
+}
+
+#modalAddEntry {
+    width: 600pt;
+}
+
+.blur {
+    -webkit-filter: blur(1pt);
+    -webkit-transition: -webkit-filter .50s;
+    pointer-events: none;
 }

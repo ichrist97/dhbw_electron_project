@@ -37,7 +37,61 @@ $(document).ready(() => {
     //init datepicker
     var elemsDatepicker = document.querySelectorAll('.datepicker');
     var instanceDatepicker = M.Datepicker.init(elemsDatepicker, {
-        format: "dd.mm.yyyy"
+        format: "dd.mm.yyyy",
+        i18n: {
+            cancel: "Abbrechen",
+            clear: "Löschen",
+            done: "Ok",
+            previousMonth: "<",
+            nextMonth: ">",
+            months: [
+                'Januar',
+                'Februar',
+                'März',
+                'April',
+                'Mai',
+                'Juni',
+                'Juli',
+                'August',
+                'September',
+                'Oktober',
+                'November',
+                'Dezember'
+            ],
+            monthsShort: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'Mai',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Okt',
+                'Nov',
+                'Dez'
+            ],
+            weekDays: [
+                'Sonntag',
+                'Montag',
+                'Dienstag',
+                'Mittwoch',
+                'Donnerstag',
+                'Freitag',
+                'Samstag'
+            ],
+            weekdaysShort: [
+                'So',
+                'Mo',
+                'Di',
+                'Mi',
+                'Do',
+                'Fri',
+                'Sa'
+            ],
+            weekdaysAbbrev: ['S', 'M', 'D', 'M', 'D', 'F', 'S']
+        }
     });
 });
 
