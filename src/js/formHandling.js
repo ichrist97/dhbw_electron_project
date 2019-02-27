@@ -109,7 +109,7 @@ function pullDataForWater() {
     let typeId = 1;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`;
+    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd} ORDER BY datum ASC;`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -118,28 +118,38 @@ function pullDataForWater() {
             console.log(err);
             return;
         }
-
         //set data in form
-        let waterVolume = 0;
+        let a = Array.from(result);
+        console.log(a);
+        let minVolume = 0;
+        let maxVolume = 1;
         let priceSum = 0;
-        let resultLength = Array.from(result).length;
+        let resultLength = a.length;
 
         //loop through data
-        Array.from(result).forEach((row) => {
-            waterVolume += row.verbrauch;
+        a.forEach((row, index) => {
             priceSum += row.preisProEinheit;
+            if (index === 0) { //first iteration
+                minVolume = row.verbrauch;
+            }
+            if (index === resultLength - 1) { //last iteration
+                maxVolume = row.verbrauch;
+            }
         });
-
+        console.log(maxVolume, minVolume);
+        //delta of min and max
+        let volume = maxVolume - minVolume;
+        $("#volumeWater").text(volume.toFixed(2));
         //price average
         let priceAvg = priceSum / resultLength;
-        $("#priceWater").text(priceAvg);
+        $("#priceWater").text(priceAvg.toFixed(2));
         //volume average
-        let volumeAvg = waterVolume / resultLength;
-        $("#avgVolumeWater").text(volumeAvg);
+        let volumeAvg = volume / resultLength;
+        $("#avgVolumeWater").text(volumeAvg.toFixed(2));
         //set volume
-        $("#volumeWater").text(waterVolume);
+        $("#volumeWater").text(volume.toFixed(2));
         //set useWater fee
-        let fee = waterVolume * priceAvg;
+        let fee = volume * priceAvg;
         $("#feeUseWater").text(fee.toFixed(2));
     });
 }
@@ -253,7 +263,7 @@ function pullDataForPower() {
     let typeId = 2;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`;
+    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd} ORDER BY datum ASC;`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -264,26 +274,38 @@ function pullDataForPower() {
         }
 
         //set data in form
-        let powerVolume = 0;
+        let a = Array.from(result);
+        let minVolume;
+        let maxVolume;
         let priceSum = 0;
-        let resultLength = Array.from(result).length;
+        let resultLength = a.length;
 
         //loop through data
-        Array.from(result).forEach((row) => {
-            powerVolume += row.verbrauch;
+        a.forEach((row, index) => {
             priceSum += row.preisProEinheit;
+            if (index === 0) { //first iteration
+                minVolume = row.verbrauch;
+                return;
+            }
+            if (index === resultLength - 1) { //last iteration
+                maxVolume = row.verbrauch;
+            }
         });
+        //delta of min and max
+        let volume = maxVolume - minVolume;
+        $("#volumePower").text(volume.toFixed(2));
+
 
         //price average
         let priceAvg = priceSum / resultLength;
         $("#pricePower").text(priceAvg.toFixed(2));
         //volume average
-        let volumeAvg = powerVolume / resultLength;
+        let volumeAvg = volume / resultLength;
         $("#avgVolumePower").text(volumeAvg.toFixed(2));
         //set volume
-        $("#volumePower").text(powerVolume);
+        $("#volumePower").text(volume);
         //set usepower fee
-        let fee = powerVolume * priceAvg;
+        let fee = volume * priceAvg;
         $("#feeUsePower").text(fee.toFixed(2));
     });
 }
@@ -357,7 +379,8 @@ function pullDataForGas() {
     let typeId = 3;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd};`;
+    //select everything from table in date range and order by ascending date
+    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd} ORDER BY datum ASC;`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -368,15 +391,27 @@ function pullDataForGas() {
         }
 
         //set data in form
-        let gasVolume = 0;
+        let a = Array.from(result);
+
+        let minVolume;
+        let maxVolume;
         let priceSum = 0;
-        let resultLength = Array.from(result).length;
+        let resultLength = a.length;
 
         //loop through data
-        Array.from(result).forEach((row) => {
-            gasVolume += row.verbrauch;
+        a.forEach((row, index) => {
             priceSum += row.preisProEinheit;
+            if (index === 0) { //first iteration
+                minVolume = row.verbrauch;
+                return;
+            }
+            if (index === resultLength - 1) { //last iteration
+                maxVolume = row.verbrauch;
+            }
         });
+        //delta of min and max
+        let volume = maxVolume - minVolume;
+        $("#volumeGas").text(volume.toFixed(2));
 
         //price average
         let priceAvg = priceSum / resultLength;
@@ -384,10 +419,8 @@ function pullDataForGas() {
         priceAvg /= 100;
         $("#priceGas").text(priceAvg.toFixed(2));
         //volume average
-        let volumeAvg = gasVolume / periodLength;
+        let volumeAvg = volume / periodLength;
         $("#avgVolumeGas").text(volumeAvg.toFixed(2));
-        //set volume
-        $("#volumeGas").text(gasVolume);
     });
 }
 

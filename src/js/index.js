@@ -196,11 +196,6 @@ function closeCollapsible(tabTargetId) {
     });
 }
 
-//tab verträge btnCreateContract
-$("#btnCreateContract").on("click", () => {
-    console.log("add contract")
-});
-
 //change icon of collapsible when opening or closing
 Array.from(document.getElementsByClassName("collapsible-header")).forEach((element) => {
     element.addEventListener("click", (event) => {
@@ -237,7 +232,6 @@ $("#type").on("change", (event) => {
 
 //clear modalAddEntry when closing it
 $("#closeModalEntry").on("click", () => {
-    console.log("modal closed")
     //clear inputs
     let inputs = document.getElementById("modalAddEntry").querySelectorAll("input");
     Array.from(inputs).forEach((element) => {

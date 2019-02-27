@@ -13,6 +13,7 @@ const connection = mysql.createConnection({
 
 $(document).ready(() => {
     loadExistingData();
+    initCounterSelect();
 });
 
 function loadExistingData() {
@@ -156,5 +157,35 @@ function createEditBtn(tbody) {
         $("#newDatum").val(td[1].innerText);
         $("#newVerbrauch").val(td[2].innerText);
         $("#newPreisProEinheit").val(td[3].innerText);
+    });
+}
+
+function initCounterSelect() {
+    let query = `SELECT DISTINCT zaehlernummer, zaehlertyp_id FROM zaehlerstand GROUP BY zaehlertyp_id;`;
+    console.log(query);
+    connection.query(query, (err, result) => {
+        if (err) {
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        let a = Array.from(result);
+        a.forEach((row) => {
+            console.log(row.zaehlernummer);
+            console.log(row.zaehlertyp_id);
+            if (row.zaehlertyp_id == 1) { //water
+                console.log("water")
+                let option = document.createElement("option");
+                option.setAttribute("value", "water");
+                option.innerText = row.zaehlernummer;
+                document.getElementById("counterWater").appendChild(option);
+            } else if (row.zaehlertyp_id == 2) { //power
+                let html = `<option value="water">${row.zaehlernummer}</option>`;
+                document.getElementById("counterPower").innerHTML += html;
+            } else if (row.zaehlertyp_id == 3) { //gas
+                let html = `<option value="water">${row.zaehlernummer}</option>`;
+                document.getElementById("counterGas").innerHTML += html;
+            }
+        });
     });
 }
