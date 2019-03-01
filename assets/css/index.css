@@ -197,7 +197,7 @@ table .btn-small {
     background-position: center;
 }
 
-#finanzenLeftBar {
+.sidebar-left {
     height: 100%;
     /* Full-height: remove this if you want "auto" height */
     width: 180pt;
@@ -210,13 +210,12 @@ table .btn-small {
     /* Stay at the top */
     left: 0;
     background-color: #FFF;
-    /* Black */
     overflow-x: hidden;
     /* Disable horizontal scroll */
     padding-top: 40pt;
 }
 
-#finanzenRightBar {
+.sidebar-right {
     height: 100%;
     /* Full-height: remove this if you want "auto" height */
     width: 180pt;
@@ -229,7 +228,6 @@ table .btn-small {
     /* Stay at the top */
     right: 0;
     background-color: #FFF;
-    /* Black */
     overflow-x: hidden;
     /* Disable horizontal scroll */
     padding-top: 40pt;
@@ -247,6 +245,10 @@ table .btn-small {
 
 #rightBarSum {
     font-weight: bold;
+}
+
+#tableContainer {
+    margin-left: 180pt;
 }
 
 .tableValue {

@@ -16,8 +16,10 @@ $(document).ready(() => {
     initCounterSelect();
 });
 
+let entryIdMap = new Map();
+
 function loadExistingData() {
-    let selectArgs = ["zaehlertyp.name", "zaehlernummer", "DATE_FORMAT(datum, \"%e.%m.%Y\") AS datum", "verbrauch", "preisProEinheit"];
+    let selectArgs = ["zaehlerstand.id", "zaehlertyp.name", "zaehlernummer", "DATE_FORMAT(datum, \"%e.%m.%Y\") AS datum", "verbrauch", "preisProEinheit"];
     let fromArgs = ["zaehlerstand, zaehlertyp"];
     let whereArgs = ["zaehlertyp_id = zaehlertyp.id"];
 
@@ -31,8 +33,13 @@ function loadExistingData() {
             return;
         }
 
+        let waterCtr = 0;
+        let powerCtr = 0;
+        let gasCtr = 0;
+
         Array.from(result).forEach((row) => {
             //load into table
+            let id = row.id;
             let zählertyp = row.name;
             let zählernummer = row.zaehlernummer;
             let datum = row.datum;
@@ -45,14 +52,17 @@ function loadExistingData() {
                 case "Wasser":
                     $("#tbodyWasser").append(entry);
                     tbody = document.getElementById("tbodyWasser");
+                    waterCtr++;
                     break;
                 case "Gas":
                     $("#tbodyGas").append(entry);
                     tbody = document.getElementById("tbodyGas");
+                    gasCtr++;
                     break;
                 case "Strom":
                     $("#tbodyStrom").append(entry);
                     tbody = document.getElementById("tbodyStrom");
+                    powerCtr++;
                     break;
                 default:
                     console.log("Unknown zählertyp");
@@ -60,7 +70,16 @@ function loadExistingData() {
             }
             //add edit btn to row
             createEditBtn(tbody);
+
+            //get latest row and map it to the id from database
+            let tRows = tbody.getElementsByTagName("tr");
+            let lastRow = tRows[tRows.length - 1];
+            entryIdMap.set(lastRow, id);
         });
+        //update sidebar
+        $("#countWater").text(waterCtr);
+        $("#countPower").text(powerCtr);
+        $("#countGas").text(gasCtr);
     });
 }
 
@@ -118,7 +137,7 @@ $("#btnAddEntry").on("click", () => {
     let html = `<tr><td>${zählernr}</td><td>${datum}</td><td>${verbrauch}</td><td>${preisProEinheit}</td><td></td></tr>`;
     tbody.innerHTML += html;
     //add edit btn to row
-    createEditBtn(tbody);
+    createEditBtn(tbody, type);
 
     M.toast({
         html: 'Zählerstand eingetragen'
@@ -137,7 +156,7 @@ $("#btnAddEntry").on("click", () => {
     }
 });
 
-function createEditBtn(tbody) {
+function createEditBtn(tbody, type) {
     let btn = document.createElement("a");
     btn.className = "btn waves-effect waves-light btn-editEntry modal-trigger";
     btn.setAttribute("href", "#modalEditEntry");
@@ -152,16 +171,49 @@ function createEditBtn(tbody) {
     //event listener of btn
     btn.addEventListener("click", () => {
         //load data into modalEditEntry
-        $("#newType").val();
+        console.log(td);
+        $("#newType").val(type);
         $("#newZählernummer").val(td[0].innerText);
         $("#newDatum").val(td[1].innerText);
         $("#newVerbrauch").val(td[2].innerText);
-        $("#newPreisProEinheit").val(td[3].innerText);
+        let price = td[3].innerText;
+        price = price.replace(",", ".");
+        $("#newPreisProEinheit").val(price);
     });
 }
 
+//edit entry in modal
+$("#btnEditEntry").on("click", () => {
+    //pull data
+    let id; //need to get id from somewhere 
+    let type = mysql.escape($("#newType").val());
+    let counterNr = mysql.escape($("#newZählernummer").val());
+    let date = mysql.escape($("#newDatum").val());
+    let amount = mysql.escape($("#newVerbrauch").val());
+    let price = $("#newPreisProEinheit").val();
+    price = price.replace(",", ".");
+    price = mysql.escape(price);
+
+    //query
+    let query = `UPDATE zaehlerstand
+                SET zaehlernummer = ${counterNr}, datum = ${date}, verbrauch = ${amount}, preisProEinheit = ${price},
+                zaehlertyp_id = ${type}
+                WHERE id = ${id}`;
+    console.log(query);
+    connection.query(query, (err, result) => {
+        if (err) {
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        console.log("Updated entry in database");
+    });
+});
+
 function initCounterSelect() {
-    let query = `SELECT DISTINCT zaehlernummer, zaehlertyp_id FROM zaehlerstand GROUP BY zaehlertyp_id;`;
+    let query = `SELECT DISTINCT zaehlernummer, zaehlertyp_id
+                FROM zaehlerstand
+                GROUP BY zaehlertyp_id;`;
     console.log(query);
     connection.query(query, (err, result) => {
         if (err) {
@@ -171,20 +223,21 @@ function initCounterSelect() {
         }
         let a = Array.from(result);
         a.forEach((row) => {
-            console.log(row.zaehlernummer);
-            console.log(row.zaehlertyp_id);
             if (row.zaehlertyp_id == 1) { //water
-                console.log("water")
-                let option = document.createElement("option");
-                option.setAttribute("value", "water");
-                option.innerText = row.zaehlernummer;
-                document.getElementById("counterWater").appendChild(option);
+                $("#selectCounterWater").append($(`<option value="${row.zaehlernummer}">${row.zaehlernummer}</option>`));
+                //update materialize select
+                let selectElem = document.querySelectorAll("#selectCounterWater");
+                M.FormSelect.init(selectElem, {});
             } else if (row.zaehlertyp_id == 2) { //power
-                let html = `<option value="water">${row.zaehlernummer}</option>`;
-                document.getElementById("counterPower").innerHTML += html;
+                $("#selectCounterPower").append($(`<option value="${row.zaehlernummer}">${row.zaehlernummer}</option>`));
+                //update materialize select
+                let selectElem = document.querySelectorAll("#selectCounterPower");
+                M.FormSelect.init(selectElem, {});
             } else if (row.zaehlertyp_id == 3) { //gas
-                let html = `<option value="water">${row.zaehlernummer}</option>`;
-                document.getElementById("counterGas").innerHTML += html;
+                $("#selectCounterGas").append($(`<option value="${row.zaehlernummer}">${row.zaehlernummer}</option>`));
+                //update materialize select
+                let selectElem = document.querySelectorAll("#selectCounterGas");
+                M.FormSelect.init(selectElem, {});
             }
         });
     });

@@ -25,7 +25,36 @@
         <!-- Data Tab -->
         <div id="data" class="col s12 tabContent">
 
-            <div>
+            <div class="sidebar-left div-border z-depth-2 center">
+                <h6><span class="teal-text lighten-2 bold">Zählerstände</span></h6>
+                <table>
+                    <thead>
+                        <th>Art</th>
+                        <th>Anzahl Einträge</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Wasser</td>
+                            <td id="countWater"></td>
+                        </tr>
+                        <tr>
+                            <td>Strom</td>
+                            <td id="countPower"></td>
+                        </tr>
+                        <tr>
+                            <td>Gas</td>
+                            <td id="countGas"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--
+                <br>
+                <hr>
+                <h6><span class="bold teal-text lighten-2">Filter</span></h6>
+                -->
+            </div>
+
+            <div id="tableContainer">
                 <ul class="collapsible expandable">
                     <!-- Wasser Tabelle -->
                     <li>
@@ -148,9 +177,8 @@
 
         <div id="finanzen" class="col s12 tabContent">
             <!-- Left bar -->
-            <div id="finanzenLeftBar" class="div-border z-depth-2 center">
+            <div class="sidebar-left div-border z-depth-2 center">
                 <h6><b><span class="teal-text lighten-2">Abrechnungsperiode</span></b></h6>
-                <br>
                 <div class="input-field">
                     <label for="zeitraumVon" class="black-text">Von:</label>
                     <input id="zeitraumVon" type="text" class="datepicker">
@@ -161,29 +189,28 @@
                 </div>
                 <br>
                 <h6><span class="teal-text lighten-2 bold">Zähler auswählen</span></h6>
-                <div class="input-field">
-                    <label for="counterWater">Wasserzähler</label>
-                    <select id="counterWater">
-                        <option value="" disable selected>Wähle deine Option</option>
-                    </select>
-                </div>
-                <div class="input-field">
-                    <label for="counterPower">Stromzähler</label>
-                    <select id="counterPower">
+
+                <label for="selectCounterWater" class="black-text">Wasserzähler</label>
+                <select id="selectCounterWater">
+                    <option value="" disable selected>Wähle deine Option</option>
+                </select>
+
+                <div>
+                    <label for="selectCounterPower" class="black-text">Stromzähler</label>
+                    <select id="selectCounterPower">
                         <option disable selected>Wähle deine Option</option>
                     </select>
                 </div>
-                <div class="input-field">
-                    <label for="counterGas">Gaszähler</label>
-                    <select id="counterGas">
-                        <option value="" disable selected>Wähle deine Option</option>
-                    </select>
-                </div>
+
+                <label for="selectCounterGas" class="black-text">Gaszähler</label>
+                <select id="selectCounterGas">
+                    <option value="" disable selected>Wähle deine Option</option>
+                </select>
+                <br>
                 <button id="selectPeriod" class="btn-small teal lighten-2 waves-effect waves-light">Auswählen</button>
                 <br>
                 <br>
                 <hr>
-
                 <h6><b><span class="teal-text lighten-2">Abrechnungsperiode<br>Anzahl Tage</span></b></h6>
                 <h6 id="periodLength" class="bold">0</h6>
             </div>
@@ -484,7 +511,7 @@
                     </li>
                 </ul>
             </div>
-            <div id="finanzenRightBar" class="div-border z-depth-2 center">
+            <div class="sidebar-right div-border z-depth-2 center">
                 <h6><b><span class="teal-text lighten-2">Kosten</span></b></h6>
                 <br>
                 <table>
@@ -599,29 +626,21 @@
                         <option value="Gas">Gas</option>
                     </select>
                 </div>
-                <div class="input-field">
-                    <label for="newZählernummer" class="teal-text lighten-2">Zählernummer</label>
-                    <input id="newZählernummer" type="number" min="0">
-                </div>
-                <div class="input-field">
-                    <label for="newDatum" class="teal-text lighten-2">Datum</label>
-                    <input id="newDatum" type="text" class="datepicker">
-                </div>
-                <div class="input-field">
-                    <label id="newVerbrauchLabel" for="verbrauch" class="teal-text lighten-2">Verbrauch</label>
-                    <input id="newVerbrauch" type="number" min="0">
-                </div>
-                <div class="input-field">
-                    <label for="newPreisProEinheit" class="teal-text lighten-2">Preis pro Einheit</label>
-                    <input id="newPreisProEinheit" type="number" min="0">
-                </div>
+                <label for="newZählernummer" class="teal-text lighten-2">Zählernummer</label>
+                <input id="newZählernummer" type="text">
+                <label for="newDatum" class="teal-text lighten-2">Datum</label>
+                <input id="newDatum" type="text" class="datepicker">
+                <label id="newVerbrauchLabel" for="verbrauch" class="teal-text lighten-2">Verbrauch</label>
+                <input id="newVerbrauch" type="number" min="0">
+                <label for="newPreisProEinheit" class="teal-text lighten-2">Preis pro Einheit</label>
+                <input id="newPreisProEinheit" type="number" min="0">
             </div>
 
         </div>
         <hr style="width:95%;">
         <div class="modal-footer">
             <a id="closeModalEditEntry" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
-            <a id="btnEditEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Eintragen</a>
+            <a id="btnEditEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Ändern</a>
         </div>
     </div>
 

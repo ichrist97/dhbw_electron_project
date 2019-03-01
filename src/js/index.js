@@ -240,16 +240,3 @@ $("#closeModalEntry").on("click", () => {
     //clear select
     document.getElementById("modalAddEntry").querySelector("select").selectedIndex = 0;
 });
-
-//clear all inputs in finanzstatus
-$("#resetForm").on("click", () => {
-    let inputs = document.querySelector("#finanzen").getElementsByTagName("input");
-    Array.from(inputs).forEach((element) => {
-        element.value = "";
-    });
-
-    let gebühren = document.querySelector("#finanzen").querySelectorAll(".gebühr");
-    Array.from(gebühren).forEach((element) => {
-        element.innerHTML = "";
-    });
-});

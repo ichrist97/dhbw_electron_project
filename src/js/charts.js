@@ -42,11 +42,19 @@ let gasCanvas = document.getElementById("gasChart").getContext("2d");
 var gasLineChart = new Chart(ctx, {
     type: 'line',
     data: {
-        label: "GasVerbrauch",
-        xAxisId: "Zeit",
-        yAxisId: "Verbrauch",
+        labels: ["2017", "2018", "2019"],
+        datasets: [{
+            label: "test",
+            data: [1, 2, 3, 4, 5, 6]
+        }],
     },
     options: {
-
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
     }
 });

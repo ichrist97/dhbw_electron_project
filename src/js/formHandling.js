@@ -16,7 +16,7 @@ let periodLength;
 
 //period gets selected
 $("#selectPeriod").on("click", () => {
-    if (checkPeriod()) {
+    if (checkPeriod() && checkSelectedCounter()) {
         let begin = $("#zeitraumVon").val();
         let end = $("#zeitraumBis").val();
         periodLength = getDateDifference(begin, end);
@@ -68,7 +68,7 @@ function checkPeriod() {
         month: parseInt(partEnd[1]),
         year: parseInt(partEnd[2])
     };
-    // console.log(beginDate, endDate);
+    console.log(beginDate, endDate);
     //check year
     if (beginDate.year > endDate.year) {
         M.toast({
@@ -77,7 +77,7 @@ function checkPeriod() {
         return false;
     }
     //check month
-    if (beginDate.month > endDate.month) {
+    if (beginDate.month > endDate.month && beginDate.year >= endDate.year) {
         M.toast({
             html: 'Konflikt: Starttag ist später oder gleich dem Endtag'
         });
@@ -91,6 +91,23 @@ function checkPeriod() {
         return false;
     }
     //period is valid
+    return true;
+}
+
+function checkSelectedCounter() {
+    let selectWater = $("#selectCounterWater").val();
+    let selectPower = $("#selectCounterPower").val();
+    let selectGas = $("#selectCounterGas").val();
+    let a = [selectWater, selectPower, selectGas];
+    for (let i = 0; i < a.length; i++) {
+        if (isEmpty(a[i])) { //element is empty
+            M.toast({
+                html: 'Angabe zu Zählernummer fehlt'
+            });
+            return false;
+        }
+    }
+    //everything is not empty
     return true;
 }
 
@@ -109,7 +126,14 @@ function pullDataForWater() {
     let typeId = 1;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd} ORDER BY datum ASC;`;
+    //counterNr filter
+    let counterNr = $("#selectCounterWater").val();
+    counterNr = mysql.escape(counterNr);
+
+    let query = `SELECT * FROM zaehlerstand
+                WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd}
+                AND zaehlernummer = ${counterNr}
+                ORDER BY datum ASC;`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -120,7 +144,6 @@ function pullDataForWater() {
         }
         //set data in form
         let a = Array.from(result);
-        console.log(a);
         let minVolume = 0;
         let maxVolume = 1;
         let priceSum = 0;
@@ -136,7 +159,6 @@ function pullDataForWater() {
                 maxVolume = row.verbrauch;
             }
         });
-        console.log(maxVolume, minVolume);
         //delta of min and max
         let volume = maxVolume - minVolume;
         $("#volumeWater").text(volume.toFixed(2));
@@ -263,7 +285,14 @@ function pullDataForPower() {
     let typeId = 2;
     typeId = mysql.escape(typeId);
 
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd} ORDER BY datum ASC;`;
+    //counterNr filter
+    let counterNr = $("#selectCounterPower").val();
+    counterNr = mysql.escape(counterNr);
+
+    let query = `SELECT * FROM zaehlerstand
+                WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd}
+                AND zaehlernummer = ${counterNr}
+                ORDER BY datum ASC;`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -379,8 +408,15 @@ function pullDataForGas() {
     let typeId = 3;
     typeId = mysql.escape(typeId);
 
+    //counterNr filter
+    let counterNr = $("#selectCounterGas").val();
+    counterNr = mysql.escape(counterNr);
+
     //select everything from table in date range and order by ascending date
-    let query = `SELECT * FROM zaehlerstand WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd} ORDER BY datum ASC;`;
+    let query = `SELECT * FROM zaehlerstand
+                WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd}
+                AND zaehlernummer = ${counterNr}
+                ORDER BY datum ASC;`;
     console.log(query);
 
     connection.query(query, (err, result) => {
@@ -541,3 +577,35 @@ function formatDataForSQL(str) {
     }
     return formatDate;
 }
+
+//clear all inputs in finanzstatus
+$("#resetForm").on("click", () => {
+    let inputs = document.querySelector("#finanzen").getElementsByTagName("input");
+    Array.from(inputs).forEach((element) => {
+        element.value = "";
+    });
+
+    let gebühren = document.querySelector("#finanzen").querySelectorAll(".gebühr");
+    Array.from(gebühren).forEach((element) => {
+        element.innerHTML = "";
+    });
+
+    let selects = document.querySelector("#finanzen").querySelectorAll("select");
+    Array.from(selects).forEach((element) => {
+        element.value = "";
+    });
+
+    $("#periodLength").text(""); //empty period length
+
+    let sidebarValues = document.querySelectorAll(".tableValue");
+    Array.from(sidebarValues).forEach((element) => {
+        element.innerHTML = "0";
+    });
+    $("#rightBarSum").text("0");
+
+    //collapse all divs
+    $("#closeAllCollapsibleFinance").click();
+
+    //blur out main
+    document.getElementById("finanzenMain").classList.add("blur");
+});
