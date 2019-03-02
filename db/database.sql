@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 27. Feb 2019 um 22:25
+-- Erstellungszeit: 02. Mrz 2019 um 09:55
 -- Server-Version: 10.1.37-MariaDB
 -- PHP-Version: 7.2.12
 
@@ -82,7 +82,12 @@ INSERT INTO `zaehlerstand` (`id`, `zaehlernummer`, `datum`, `verbrauch`, `preisP
 (41, '8EMTB217000753', '2017-05-23', 392, 2.27, 1),
 (42, '8EMTB217000753', '2018-01-01', 447, 2.27, 1),
 (43, '8EMTB217000753', '2018-05-17', 502, 2.27, 1),
-(44, '8EMTB217000753', '2019-01-01', 560, 2.27, 1);
+(44, '8EMTB217000753', '2019-01-01', 560, 2.27, 1),
+(45, '64849', '2018-10-01', 5024, 25.1, 2),
+(46, '64849', '2019-02-01', 6549, 25.1, 2),
+(47, '8EMTB217000753', '2018-10-01', 532, 2.27, 1),
+(48, '8EMTB217000753', '2019-02-01', 581, 2.27, 2),
+(49, '91862', '2019-03-01', 3221, 5.5, 3);
 
 --
 -- Indizes der exportierten Tabellen
@@ -93,7 +98,7 @@ INSERT INTO `zaehlerstand` (`id`, `zaehlernummer`, `datum`, `verbrauch`, `preisP
 --
 ALTER TABLE `zaehlerstand`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `fk_zählertyp` (`zaehlertyp_id`);
+  ADD KEY `fk_zaehlertyp` (`zaehlertyp_id`) USING BTREE;
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -103,7 +108,7 @@ ALTER TABLE `zaehlerstand`
 -- AUTO_INCREMENT für Tabelle `zaehlerstand`
 --
 ALTER TABLE `zaehlerstand`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- Constraints der exportierten Tabellen
