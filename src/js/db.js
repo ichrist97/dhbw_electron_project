@@ -16,8 +16,6 @@ $(document).ready(() => {
     initCounterSelect();
 });
 
-let entryIdMap = new Map();
-
 function loadExistingData() {
     let selectArgs = ["zaehlerstand.id", "zaehlertyp.name", "zaehlernummer", "DATE_FORMAT(datum, \"%e.%m.%Y\") AS datum", "verbrauch", "preisProEinheit"];
     let fromArgs = ["zaehlerstand, zaehlertyp"];
@@ -40,15 +38,15 @@ function loadExistingData() {
         Array.from(result).forEach((row) => {
             //load into table
             let id = row.id;
-            let zählertyp = row.name;
+            let type = row.name;
             let zählernummer = row.zaehlernummer;
             let datum = row.datum;
             let verbrauch = String(row.verbrauch).replace(".", ",");
             let preisProEinheit = String(row.preisProEinheit).replace(".", ",");
-            let entry = `<tr><td>${zählernummer}</td><td>${datum}</td><td>${verbrauch}</td><td>${preisProEinheit}</td><td></td></tr>`;
+            let entry = `<tr><td class="entryId" style="display:none">${id}</td><td>${zählernummer}</td><td>${datum}</td><td>${verbrauch}</td><td>${preisProEinheit}</td><td></td></tr>`;
 
             let tbody;
-            switch (zählertyp) {
+            switch (type) {
                 case "Wasser":
                     $("#tbodyWasser").append(entry);
                     tbody = document.getElementById("tbodyWasser");
@@ -68,13 +66,11 @@ function loadExistingData() {
                     console.log("Unknown zählertyp");
                     break;
             }
-            //add edit btn to row
-            createEditBtn(tbody);
 
-            //get latest row and map it to the id from database
-            let tRows = tbody.getElementsByTagName("tr");
-            let lastRow = tRows[tRows.length - 1];
-            entryIdMap.set(lastRow, id);
+            //add delete btn to row
+            createDelBtn(tbody);
+            //add edit btn to row
+            createEditBtn(tbody, type);
         });
         //update sidebar
         $("#countWater").text(waterCtr);
@@ -103,9 +99,9 @@ $("#btnAddEntry").on("click", () => {
 
     //sql query
     // let tableName = mysql.escape("zaehlerstand");
-    let param = ["zaehlernummer", "datum", "verbrauch", "zaehlertyp_id"];
+    let param = ["zaehlernummer", "datum", "verbrauch", "zaehlertyp_id", "preisProEinheit"];
     //escape inputs
-    values = [zählernr, formattedDate, verbrauch, foreignKey];
+    values = [zählernr, formattedDate, verbrauch, foreignKey, preisProEinheit];
     for (let i = 0; i < values.length; i++) {
         values[i] = mysql.escape(values[i]);
     }
@@ -121,23 +117,7 @@ $("#btnAddEntry").on("click", () => {
         }
         console.log("Succesfully inserted into database");
     });
-
-    //show in table
-    let tbody;
-    if (type === "Wasser") {
-        tbody = document.getElementById("tbodyWasser");
-    } else if (type === "Strom") {
-        tbody = document.getElementById("tbodyStrom");
-    } else if (type === "Gas") {
-        tbody = document.getElementById("tbodyGas");
-    } else {
-        console.log("No tbody found");
-    }
-
-    let html = `<tr><td>${zählernr}</td><td>${datum}</td><td>${verbrauch}</td><td>${preisProEinheit}</td><td></td></tr>`;
-    tbody.innerHTML += html;
-    //add edit btn to row
-    createEditBtn(tbody, type);
+    refreshTable();
 
     M.toast({
         html: 'Zählerstand eingetragen'
@@ -168,27 +148,44 @@ function createEditBtn(tbody, type) {
     let td = rows[rows.length - 1].childNodes;
     td[td.length - 1].appendChild(btn);
 
-    //event listener of btn
-    btn.addEventListener("click", () => {
+    //event listener for opening the edit modal
+    btn.addEventListener("click", (event) => {
         //load data into modalEditEntry
-        console.log(td);
+        let tr = event.currentTarget.parentElement.parentElement;
+        let id = tr.childNodes[0].innerText;
+        $("#editIdHolder").text(id);
         $("#newType").val(type);
-        $("#newZählernummer").val(td[0].innerText);
-        $("#newDatum").val(td[1].innerText);
-        $("#newVerbrauch").val(td[2].innerText);
-        let price = td[3].innerText;
+        //reset materialize select
+        let selectElem = document.querySelector("#newType");
+        M.FormSelect.init(selectElem, {});
+        $("#newZählernummer").val(td[1].innerText);
+        $("#newDatum").val(td[2].innerText);
+        $("#newVerbrauch").val(td[3].innerText);
+        let price = td[4].innerText;
         price = price.replace(",", ".");
         $("#newPreisProEinheit").val(price);
     });
 }
 
 //edit entry in modal
-$("#btnEditEntry").on("click", () => {
+$("#btnEditEntry").on("click", (event) => {
     //pull data
-    let id; //need to get id from somewhere 
-    let type = mysql.escape($("#newType").val());
+    let id = $("#editIdHolder").text();
+    id = mysql.escape(id);
+    let type = $("#newType").val();
+    let typeId;
+    if (type === "Wasser") {
+        typeId = 1;
+    } else if (type === "Strom") {
+        typeId = 2;
+    } else if (type === "Gas") {
+        typeId = 3;
+    }
+    typeId = mysql.escape(typeId);
+
     let counterNr = mysql.escape($("#newZählernummer").val());
-    let date = mysql.escape($("#newDatum").val());
+    let date = $("#newDatum").val();
+    let formatDate = mysql.escape(formatDataForSQL(date));
     let amount = mysql.escape($("#newVerbrauch").val());
     let price = $("#newPreisProEinheit").val();
     price = price.replace(",", ".");
@@ -196,9 +193,9 @@ $("#btnEditEntry").on("click", () => {
 
     //query
     let query = `UPDATE zaehlerstand
-                SET zaehlernummer = ${counterNr}, datum = ${date}, verbrauch = ${amount}, preisProEinheit = ${price},
-                zaehlertyp_id = ${type}
-                WHERE id = ${id}`;
+                SET zaehlernummer = ${counterNr}, datum = ${formatDate}, verbrauch = ${amount}, preisProEinheit = ${price},
+                zaehlertyp_id = ${typeId}
+                WHERE id = ${id};`;
     console.log(query);
     connection.query(query, (err, result) => {
         if (err) {
@@ -208,13 +205,55 @@ $("#btnEditEntry").on("click", () => {
         }
         console.log("Updated entry in database");
     });
+    refreshTable();
+    M.toast({
+        html: 'Zählerstand verändert'
+    });
+});
+
+function createDelBtn(tbody) {
+    let btn = document.createElement("a");
+    btn.className = "btn waves-effect waves-light modal-trigger";
+    btn.setAttribute("href", "#modalDelEntry");
+    let icon = document.createElement("i");
+    icon.className = "large material-icons";
+    icon.innerText = "delete";
+    btn.appendChild(icon);
+    let rows = tbody.getElementsByTagName("tr");
+    let td = rows[rows.length - 1].childNodes;
+    td[td.length - 1].appendChild(btn);
+
+    btn.addEventListener("click", (event) => {
+        let tr = event.currentTarget.parentElement.parentElement;
+        let id = tr.childNodes[0].innerText;
+        $("#delIdHolder").text(id);
+    });
+}
+
+$("#deleteEntry").on("click", () => {
+    let id = $("#delIdHolder").text();
+    id = mysql.escape(id);
+    let query = `DELETE FROM zaehlerstand WHERE id = ${id}`;
+    console.log(query);
+    connection.query(query, (err, result) => {
+        if (err) {
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        console.log("Deleted entry in database");
+    });
+    refreshTable();
+    M.toast({
+        html: 'Zählerstand gelöscht'
+    });
 });
 
 function initCounterSelect() {
     let query = `SELECT DISTINCT zaehlernummer, zaehlertyp_id
                 FROM zaehlerstand
                 GROUP BY zaehlertyp_id;`;
-    console.log(query);
+    //console.log(query);
     connection.query(query, (err, result) => {
         if (err) {
             console.log("An error ocurred performing the query.");
@@ -241,4 +280,24 @@ function initCounterSelect() {
             }
         });
     });
+}
+
+function formatDataForSQL(str) {
+    let part = str.split(".");
+    let formatDate = "";
+    for (let i = part.length - 1; i >= 0; i--) {
+        formatDate += part[i];
+        if (i !== 0) {
+            formatDate += "-";
+        }
+    }
+    return formatDate;
+}
+
+function refreshTable() {
+    let tbodies = document.querySelector("#tableContainer").querySelectorAll("tbody");
+    Array.from(tbodies).forEach((element) => {
+        element.innerHTML = "";
+    });
+    loadExistingData();
 }

@@ -70,7 +70,7 @@
                                         <th>Datum</th>
                                         <th>Verbrauch</th>
                                         <th>Preis pro Einheit</th>
-                                        <th></th>
+                                        <!--<th></th>-->
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyWasser">
@@ -635,12 +635,12 @@
                 <label for="newPreisProEinheit" class="teal-text lighten-2">Preis pro Einheit</label>
                 <input id="newPreisProEinheit" type="number" min="0">
             </div>
-
+            <p id="editIdHolder" style="display:none"></p>
         </div>
         <hr style="width:95%;">
         <div class="modal-footer">
             <a id="closeModalEditEntry" href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
-            <a id="btnEditEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Ändern</a>
+            <button id="btnEditEntry" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Ändern</button>
         </div>
     </div>
 
@@ -657,6 +657,23 @@
         <div class="modal-footer">
             <a href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
             <a id="resetForm" href="#!" class="modal-close waves-effect waves-light btn teal lighten-2">Zurücksetzen</a>
+        </div>
+    </div>
+
+    <!-- Modal Delete table entry -->
+    <div id="modalDelEntry" class="modal" style="width:400pt">
+        <div class="modal-content">
+            <!--Header-->
+            <h4>Sind sie sicher?</h4>
+            <hr>
+            <!--Content-->
+            <h6>Dieser Zählereintrag wird gelöscht</h6>
+            <p id="delIdHolder" style="display:none"></p>
+        </div>
+        <hr style="width:90%;">
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect btn-flat">Abbrechen</a>
+            <a id="deleteEntry" href="#!" class="modal-close waves-effect waves-light btn red">Löschen</a>
         </div>
     </div>
 

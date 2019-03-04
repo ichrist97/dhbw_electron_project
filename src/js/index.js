@@ -157,7 +157,10 @@ Array.from(document.getElementsByClassName("collapsible-header")).forEach((eleme
 
 //unfold all collapsible
 $("#unfoldAllCollapsibleFinance").on("click", () => {
-    unfoldCollapsible("#finanzen");
+    let isBlurred = $("#finanzenMain").hasClass("blur");
+    if (!isBlurred) {
+        unfoldCollapsible("#finanzen");
+    }
 });
 $("#unfoldAllCollapsibleTable").on("click", () => {
     unfoldCollapsible("#data");
@@ -167,7 +170,10 @@ $("#unfoldAllCollapsibleContract").on("click", () => {
 });
 //close all collapsible
 $("#closeAllCollapsibleFinance").on("click", () => {
-    closeCollapsible("#finanzen");
+    let isBlurred = $("#finanzenMain").hasClass("blur");
+    if (!isBlurred) {
+        closeCollapsible("#finanzen");
+    }
 });
 $("#closeAllCollapsibleTable").on("click", () => {
     closeCollapsible("#data");

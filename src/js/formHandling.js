@@ -68,7 +68,6 @@ function checkPeriod() {
         month: parseInt(partEnd[1]),
         year: parseInt(partEnd[2])
     };
-    console.log(beginDate, endDate);
     //check year
     if (beginDate.year > endDate.year) {
         M.toast({
@@ -327,6 +326,7 @@ function pullDataForPower() {
 
         //price average
         let priceAvg = priceSum / resultLength;
+        priceAvg /= 100; //convert from cent to euro
         $("#pricePower").text(priceAvg.toFixed(2));
         //volume average
         let volumeAvg = volume / resultLength;
@@ -564,18 +564,6 @@ function updateSidebarTotal() {
 
 function isEmpty(str) {
     return (!str || 0 === str.length);
-}
-
-function formatDataForSQL(str) {
-    let part = str.split(".");
-    let formatDate = "";
-    for (let i = part.length - 1; i >= 0; i--) {
-        formatDate += part[i];
-        if (i !== 0) {
-            formatDate += "-";
-        }
-    }
-    return formatDate;
 }
 
 //clear all inputs in finanzstatus
