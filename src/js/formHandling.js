@@ -368,7 +368,7 @@ function pullDataForPower() {
 
 
         //price average
-        let priceAvg = priceSum / resultLength;
+        let priceAvg = calcPriceAvg(dataForAvg);
         priceAvg /= 100; //convert from cent to euro
         $("#pricePower").text(priceAvg.toFixed(2));
         //volume average
@@ -501,7 +501,7 @@ function pullDataForGas() {
         $("#volumeGas").text(volume.toFixed(2));
 
         //price average
-        let priceAvg = priceSum / resultLength;
+        let priceAvg = calcPriceAvg(dataForAvg);
         //convert price from cent to euro
         priceAvg /= 100;
         $("#priceGas").text(priceAvg.toFixed(2));
