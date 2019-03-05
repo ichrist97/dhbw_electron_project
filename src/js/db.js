@@ -198,7 +198,7 @@ $("#btnEditEntry").on("click", (event) => {
 
     let counterNr = mysql.escape($("#newZählernummer").val());
     let date = $("#newDatum").val();
-    let formatDate = mysql.escape(formatDataToSQL(date));
+    let formatDate = mysql.escape(formatDateToSQL(date));
     let amount = mysql.escape($("#newVerbrauch").val());
     let price = $("#newPreisProEinheit").val();
     price = price.replace(",", ".");
@@ -302,6 +302,18 @@ function formatDateToSQL(str) {
         formatDate += part[i];
         if (i !== 0) {
             formatDate += "-";
+        }
+    }
+    return formatDate;
+}
+
+function formatDateFromSQL(str) {
+    let part = str.toString().split("-");
+    let formatDate = "";
+    for (let i = part.length - 1; i >= 0; i--) {
+        formatDate += part[i];
+        if (i !== 0) {
+            formatDate += ".";
         }
     }
     return formatDate;

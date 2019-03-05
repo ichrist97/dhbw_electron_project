@@ -129,7 +129,8 @@ function pullDataForWater() {
     let counterNr = $("#selectCounterWater").val();
     counterNr = mysql.escape(counterNr);
 
-    let query = `SELECT * FROM zaehlerstand
+    let query = `SELECT zaehlernummer, DATE_FORMAT(datum, \"%d.%m.%Y\") AS format, verbrauch, preisProEinheit
+                FROM zaehlerstand
                 WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd}
                 AND zaehlernummer = ${counterNr}
                 ORDER BY datum ASC;`;
@@ -147,6 +148,7 @@ function pullDataForWater() {
         let maxVolume = 1;
         let priceSum = 0;
         let resultLength = a.length;
+        let dataForAvg = [];
 
         //loop through data
         a.forEach((row, index) => {
@@ -157,12 +159,18 @@ function pullDataForWater() {
             if (index === resultLength - 1) { //last iteration
                 maxVolume = row.verbrauch;
             }
+            //calc avg
+            let item = {
+                price: row.preisProEinheit,
+                date: formatDateFromSQL(row.format)
+            };
+            dataForAvg.push(item);
         });
         //delta of min and max
         let volume = maxVolume - minVolume;
         $("#volumeWater").text(volume.toFixed(2));
         //price average
-        let priceAvg = priceSum / resultLength;
+        let priceAvg = calcPriceAvg(dataForAvg);
         $("#priceWater").text(priceAvg.toFixed(2));
         //volume average
         let volumeAvg = volume / resultLength;
@@ -173,6 +181,33 @@ function pullDataForWater() {
         let fee = volume * priceAvg;
         $("#feeUseWater").text(fee.toFixed(2));
     });
+}
+
+function calcPriceAvg(data) {
+    let avg = 0;
+    let diffSum = 0;
+    let factors = [];
+    //get date differences
+    for (let i = 0; i < data.length; i++) {
+        let dateDiff;
+        if (i < data.length - 1) { //is not last iteration
+            dateDiff = getDateDifference(data[i].date, data[i + 1].date);
+        } else {
+            let periodEnd = $("#zeitraumBis").val();
+            dateDiff = getDateDifference(data[i].date, periodEnd);
+        }
+        diffSum += dateDiff;
+        //push date difference
+        factors.push(dateDiff);
+    }
+    //calc relative difference of factors to diffSum
+    for (let i = 0; i < factors.length; i++) {
+        factors[i] = factors[i] / diffSum;
+    }
+    for (let i = 0; i < data.length; i++) {
+        avg += data[i].price * factors[i];
+    }
+    return avg;
 }
 
 //useWater base fee
@@ -288,7 +323,8 @@ function pullDataForPower() {
     let counterNr = $("#selectCounterPower").val();
     counterNr = mysql.escape(counterNr);
 
-    let query = `SELECT * FROM zaehlerstand
+    let query = `SELECT zaehlernummer, DATE_FORMAT(datum, \"%d.%m.%Y\") AS format, verbrauch, preisProEinheit
+                FROM zaehlerstand
                 WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd}
                 AND zaehlernummer = ${counterNr}
                 ORDER BY datum ASC;`;
@@ -307,6 +343,7 @@ function pullDataForPower() {
         let maxVolume;
         let priceSum = 0;
         let resultLength = a.length;
+        let dataForAvg = [];
 
         //loop through data
         a.forEach((row, index) => {
@@ -318,6 +355,12 @@ function pullDataForPower() {
             if (index === resultLength - 1) { //last iteration
                 maxVolume = row.verbrauch;
             }
+            //calc avg
+            let item = {
+                price: row.preisProEinheit,
+                date: formatDateFromSQL(row.format)
+            };
+            dataForAvg.push(item);
         });
         //delta of min and max
         let volume = maxVolume - minVolume;
@@ -413,7 +456,8 @@ function pullDataForGas() {
     counterNr = mysql.escape(counterNr);
 
     //select everything from table in date range and order by ascending date
-    let query = `SELECT * FROM zaehlerstand
+    let query = `SELECT zaehlernummer, DATE_FORMAT(datum, \"%d.%m.%Y\") AS format, verbrauch, preisProEinheit
+                FROM zaehlerstand
                 WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd}
                 AND zaehlernummer = ${counterNr}
                 ORDER BY datum ASC;`;
@@ -433,6 +477,7 @@ function pullDataForGas() {
         let maxVolume;
         let priceSum = 0;
         let resultLength = a.length;
+        let dataForAvg = [];
 
         //loop through data
         a.forEach((row, index) => {
@@ -444,6 +489,12 @@ function pullDataForGas() {
             if (index === resultLength - 1) { //last iteration
                 maxVolume = row.verbrauch;
             }
+            //calc avg
+            let item = {
+                price: row.preisProEinheit,
+                date: formatDateFromSQL(row.format)
+            };
+            dataForAvg.push(item);
         });
         //delta of min and max
         let volume = maxVolume - minVolume;
