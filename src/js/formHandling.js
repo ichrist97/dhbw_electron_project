@@ -49,7 +49,7 @@ function checkPeriod() {
     let begin = $("#zeitraumVon").val();
     let end = $("#zeitraumBis").val();
     //value empty
-    if (!isEmpty(begin) === false || !isEmpty(end) === false) {
+    if (isEmpty(begin) || isEmpty(end)) {
         M.toast({
             html: 'Zeitraum nicht ausgewählt'
         });
@@ -116,8 +116,8 @@ function checkSelectedCounter() {
 function pullDataForWater() {
     let begin = $("#zeitraumVon").val();
     let end = $("#zeitraumBis").val();
-    let formatDateBegin = formatDataForSQL(begin);
-    let formatDateEnd = formatDataForSQL(end);
+    let formatDateBegin = formatDateToSQL(begin);
+    let formatDateEnd = formatDateToSQL(end);
     formatDateBegin = mysql.escape(formatDateBegin);
     formatDateEnd = mysql.escape(formatDateEnd);
 
@@ -275,8 +275,8 @@ function displayWaterTotal() {
 function pullDataForPower() {
     let begin = $("#zeitraumVon").val();
     let end = $("#zeitraumBis").val();
-    let formatDateBegin = formatDataForSQL(begin);
-    let formatDateEnd = formatDataForSQL(end);
+    let formatDateBegin = formatDateToSQL(begin);
+    let formatDateEnd = formatDateToSQL(end);
     formatDateBegin = mysql.escape(formatDateBegin);
     formatDateEnd = mysql.escape(formatDateEnd);
 
@@ -399,8 +399,8 @@ function displayTotalPowerFee() {
 function pullDataForGas() {
     let begin = $("#zeitraumVon").val();
     let end = $("#zeitraumBis").val();
-    let formatDateBegin = formatDataForSQL(begin);
-    let formatDateEnd = formatDataForSQL(end);
+    let formatDateBegin = formatDateToSQL(begin);
+    let formatDateEnd = formatDateToSQL(end);
     formatDateBegin = mysql.escape(formatDateBegin);
     formatDateEnd = mysql.escape(formatDateEnd);
 

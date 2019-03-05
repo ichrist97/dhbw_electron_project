@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="../../assets/css/materialize.min.css">
     <link rel="stylesheet" href="../../assets/css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="../../node_modules/chart.js/dist/Chart.min.js"></script>
+    <script src="../js/materialize.min.js"></script>
+    <script src="../js/Chart.bundle.min.js"></script>
 </head>
 
 <body>
@@ -70,7 +71,6 @@
                                         <th>Datum</th>
                                         <th>Verbrauch</th>
                                         <th>Preis pro Einheit</th>
-                                        <!--<th></th>-->
                                     </tr>
                                 </thead>
                                 <tbody id="tbodyWasser">
@@ -143,6 +143,10 @@
                         <a href="#modalAddEntry" nnid="addEntry" class="btn-floating floating-acc-btn modal-trigger"><i
                                 class="material-icons">add</i></a>
                         <a class="btn-floating mobile-fab-tip">Neuen Zählerstand eintragen</a>
+                    </li>
+                    <li>
+                        <a id="createCSV" class="btn-floating floating-acc-btn modal-trigger"><i class="material-icons">file_download</i></a>
+                        <a class="btn-floating mobile-fab-tip">Zählerstände exportieren</a>
                     </li>
                     <li>
                         <a id="unfoldAllCollapsibleTable" class="btn-floating floating-acc-btn"><i class="material-icons">unfold_more</i></a>
@@ -677,11 +681,13 @@
         </div>
     </div>
 
-    <script src="../js/materialize.min.js"></script>
+    <!-- Dir Chooser -->
+    <input id="chooseDir" type="file" webkitdirectory="" directory="" style="display:none">
+
     <script src="../js/db.js"></script>
     <script src="../js/index.js"></script>
     <script src="../js/formHandling.js"></script>
-    <script src="../js/charts.js"></script>
+    <script src="../js/dashboard.js"></script>
 
 </body>
 

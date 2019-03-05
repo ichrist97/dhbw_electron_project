@@ -31,12 +31,12 @@ $(document).ready(() => {
     let instanceModal = M.Modal.init(elemsModal, {});
 
     //init select
-    var elemsSelect = document.querySelectorAll('select');
-    var instanceSelect = M.FormSelect.init(elemsSelect, {});
+    let elemsSelect = document.querySelectorAll('select');
+    let instanceSelect = M.FormSelect.init(elemsSelect, {});
 
     //init datepicker
-    var elemsDatepicker = document.querySelectorAll('.datepicker');
-    var instanceDatepicker = M.Datepicker.init(elemsDatepicker, {
+    let elemsDatepicker = document.querySelectorAll('.datepicker');
+    let instanceDatepicker = M.Datepicker.init(elemsDatepicker, {
         format: "dd.mm.yyyy",
         i18n: {
             cancel: "Abbrechen",

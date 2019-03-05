@@ -2,6 +2,8 @@
 window.$ = window.jQuery = require('jquery');
 
 const mysql = require('mysql');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+let csvWriter;
 
 // Add the credentials to access your database
 const connection = mysql.createConnection({
@@ -16,12 +18,36 @@ $(document).ready(() => {
     initCounterSelect();
 });
 
-function loadExistingData() {
-    let selectArgs = ["zaehlerstand.id", "zaehlertyp.name", "zaehlernummer", "DATE_FORMAT(datum, \"%e.%m.%Y\") AS datum", "verbrauch", "preisProEinheit"];
-    let fromArgs = ["zaehlerstand, zaehlertyp"];
-    let whereArgs = ["zaehlertyp_id = zaehlertyp.id"];
+function initCsvWriter(path) {
+    csvWriter = createCsvWriter({
+        path: `${path}\\export.csv`,
+        header: [{
+            id: "counterNr",
+            title: "zaehlernummer"
+        }, {
+            id: "date",
+            title: "datum"
+        }, {
+            id: "amount",
+            title: "verbrauch"
+        }, {
+            id: "pricePerUnit",
+            title: "preisProEinheit"
+        }, {
+            id: "counterType",
+            title: "zaehlertyp"
+        }]
+    });
+}
 
-    let query = `SELECT ${selectArgs.join()} FROM ${fromArgs.join()} WHERE ${whereArgs}`;
+function loadExistingData() {
+    let selectArgs = ["zaehlerstand.id", "zaehlertyp.name", "zaehlernummer", "DATE_FORMAT(datum,\"%e.%m.%Y\") AS formatDate", "verbrauch", "preisProEinheit"];
+    let fromArgs = ["zaehlerstand, zaehlertyp"];
+
+    let query = `SELECT ${selectArgs.join()}
+                FROM ${fromArgs.join()}
+                WHERE zaehlertyp_id = zaehlertyp.id
+                ORDER BY datum DESC`;
     //console.log(query);
 
     connection.query(query, (err, result) => {
@@ -40,7 +66,7 @@ function loadExistingData() {
             let id = row.id;
             let type = row.name;
             let zählernummer = row.zaehlernummer;
-            let datum = row.datum;
+            let datum = row.formatDate;
             let verbrauch = String(row.verbrauch).replace(".", ",");
             let preisProEinheit = String(row.preisProEinheit).replace(".", ",");
             let entry = `<tr><td class="entryId" style="display:none">${id}</td><td>${zählernummer}</td><td>${datum}</td><td>${verbrauch}</td><td>${preisProEinheit}</td><td></td></tr>`;
@@ -66,11 +92,10 @@ function loadExistingData() {
                     console.log("Unknown zählertyp");
                     break;
             }
-
-            //add delete btn to row
-            createDelBtn(tbody);
             //add edit btn to row
             createEditBtn(tbody, type);
+            //add delete btn to row
+            createDelBtn(tbody);
         });
         //update sidebar
         $("#countWater").text(waterCtr);
@@ -93,7 +118,7 @@ $("#btnAddEntry").on("click", () => {
     }
     let zählernr = $("#zählernummer").val();
     let datum = $("#datum").val();
-    let formattedDate = formatDate(datum);
+    let formattedDate = formatDateToSQL(datum);
     let verbrauch = $("#verbrauch").val();
     let preisProEinheit = $("#preisProEinheit").val();
 
@@ -122,23 +147,11 @@ $("#btnAddEntry").on("click", () => {
     M.toast({
         html: 'Zählerstand eingetragen'
     });
-
-    function formatDate(date) {
-        let part = date.split(".");
-        let formattedDate = "";
-        for (let i = part.length - 1; i >= 0; i--) {
-            formattedDate += part[i];
-            if (i !== 0) {
-                formattedDate += "-";
-            }
-        }
-        return formattedDate;
-    }
 });
 
 function createEditBtn(tbody, type) {
     let btn = document.createElement("a");
-    btn.className = "btn waves-effect waves-light btn-editEntry modal-trigger";
+    btn.className = "btn-small teal lighten-2 waves-effect waves-light modal-trigger btn-acc";
     btn.setAttribute("href", "#modalEditEntry");
     let icon = document.createElement("i");
     icon.className = "large material-icons";
@@ -185,7 +198,7 @@ $("#btnEditEntry").on("click", (event) => {
 
     let counterNr = mysql.escape($("#newZählernummer").val());
     let date = $("#newDatum").val();
-    let formatDate = mysql.escape(formatDataForSQL(date));
+    let formatDate = mysql.escape(formatDataToSQL(date));
     let amount = mysql.escape($("#newVerbrauch").val());
     let price = $("#newPreisProEinheit").val();
     price = price.replace(",", ".");
@@ -213,7 +226,7 @@ $("#btnEditEntry").on("click", (event) => {
 
 function createDelBtn(tbody) {
     let btn = document.createElement("a");
-    btn.className = "btn waves-effect waves-light modal-trigger";
+    btn.className = "btn-small red waves-effect waves-light modal-trigger btn-acc";
     btn.setAttribute("href", "#modalDelEntry");
     let icon = document.createElement("i");
     icon.className = "large material-icons";
@@ -282,8 +295,8 @@ function initCounterSelect() {
     });
 }
 
-function formatDataForSQL(str) {
-    let part = str.split(".");
+function formatDateToSQL(str) {
+    let part = str.toString().split(".");
     let formatDate = "";
     for (let i = part.length - 1; i >= 0; i--) {
         formatDate += part[i];
@@ -300,4 +313,45 @@ function refreshTable() {
         element.innerHTML = "";
     });
     loadExistingData();
+}
+
+$("#createCSV").on("click", () => {
+    $("#chooseDir").click();
+    $("#chooseDir").on("change", () => {
+        let path = document.getElementById("chooseDir").files[0].path;
+        if (path != null) {
+            initCsvWriter(path);
+            exportCSV();
+        }
+    });
+});
+
+function exportCSV() {
+    let data = [];
+    let query = `SELECT stand.zaehlernummer, DATE_FORMAT(stand.datum,\"%e.%m.%Y\") AS formatDate, stand.verbrauch, stand.preisProEinheit, typ.name
+                FROM zaehlerstand stand, zaehlertyp typ
+                WHERE stand.zaehlertyp_id = typ.id;`;
+    connection.query(query, (err, result) => {
+        if (err) {
+            console.log("An error ocurred performing the query.");
+            console.log(err);
+            return;
+        }
+        Array.from(result).forEach((row) => {
+            let item = {
+                counterNr: row.zaehlernummer,
+                date: row.formatDate,
+                amount: row.verbrauch,
+                pricePerUnit: row.preisProEinheit,
+                counterType: row.name
+            };
+            data.push(item);
+        });
+
+        //write csv
+        csvWriter.writeRecords(data).then(() => {
+            console.log("Created csv-file.");
+        });
+    });
+
 }

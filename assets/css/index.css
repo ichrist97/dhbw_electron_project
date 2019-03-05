@@ -175,12 +175,9 @@ table .btn-small {
 }
 
 /* edit button in table */
-.btn-editEntry {
-    background-color: #644d6c;
-    height: 30pt;
-    width: 35pt;
+.btn-acc {
+    margin: 2pt;
     border-radius: 10pt;
-    display: block;
 }
 
 /* Loading Screen */

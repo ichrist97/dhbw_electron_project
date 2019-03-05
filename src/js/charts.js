@@ -1,4 +1,5 @@
 //wasser dummy
+/*
 let ctx = document.getElementById("wasserChart").getContext("2d");
 let myChart = new Chart(ctx, {
     type: 'bar',
@@ -36,23 +37,42 @@ let myChart = new Chart(ctx, {
         }
     }
 });
+*/
+
+//time data
+let data = [{
+    x: new Date(2018, 0, 1),
+    y: 1
+}, {
+    x: new Date(2019, 0, 1),
+    y: 10
+}];
+console.log(data)
 
 //gas line chart
 let gasCanvas = document.getElementById("gasChart").getContext("2d");
-var gasLineChart = new Chart(ctx, {
+var gasLineChart = new Chart(gasCanvas, {
     type: 'line',
     data: {
         labels: ["2017", "2018", "2019"],
-        datasets: [{
-            label: "test",
-            data: [1, 2, 3, 4, 5, 6]
-        }],
+        datasets: [data],
     },
     options: {
+        title: {
+            display: true,
+            text: "Gasverbrauch",
+            fontSize: 24
+        },
         scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
+            xAxes: [{
+                type: "time",
+                time: {
+                    unit: "day",
+                    unitStepSize: 1,
+                    displayFormats: {
+                        "day": "D M YYYY",
+                        "month": "MMM YYYY"
+                    }
                 }
             }]
         }
