@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../../assets/css/index.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="../js/materialize.min.js"></script>
-    <script src="../js/Chart.bundle.min.js"></script>
     <script src="../js/zingchart.min.js"></script>
 </head>
 
@@ -164,19 +163,15 @@
 
         <!-- Dashboard Tab content-->
         <div id="dashboard" class="col s12 tabContent">
-            <div>
-                <div id="waterChart"></div>
-            </div>
-
-            <div class="container">
-                <h4>Strom</h4>
-                <canvas id="stromChart"></canvas>
-            </div>
-
-            <div class="container">
-                <h4>Gas</h4>
-                <canvas id="gasChart"></canvas>
-            </div>
+            <div id="waterChart"></div>
+            <br>
+            <hr>
+            <br>
+            <div id="powerChart"></div>
+            <br>
+            <hr>
+            <br>
+            <div id="gasChart"></div>
         </div>
 
         <div id="finanzen" class="col s12 tabContent">

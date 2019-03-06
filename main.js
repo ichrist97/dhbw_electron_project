@@ -1,3 +1,10 @@
+//handle setupevents as quickly as possible
+const setupEvents = require('./installers/setupEvents');
+if (setupEvents.handleSquirrelEvent()) {
+    // squirrel event handled and app will exit in 1000ms, so don't do anything else
+    return;
+}
+
 // Modules to control application life and create native browser window
 const electron = require("electron");
 const {
@@ -21,6 +28,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
+        icon: __dirname + "/assets/icons/png/icon48.png",
         webPreferences: {
             nodeIntegration: true
         }
