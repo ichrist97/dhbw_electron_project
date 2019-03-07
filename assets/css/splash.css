@@ -1,0 +1,19 @@
+body {
+    background-color: rgba(77, 182, 172, 0.6);
+}
+
+body .progress {
+    height: 10pt;
+    background-color: #fff;
+}
+
+body .indeterminate {
+    background-color: #000;
+}
+
+body h1 {
+    font-size: 60pt;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 1pt 1pt #000;
+}

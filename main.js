@@ -21,9 +21,9 @@ process.env.NODE_ENV = 'dev';
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let aboutWindow;
-let addEntryWindow;
+let splashWindow;
 
-function createWindow() {
+function createMainWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800,
@@ -31,9 +31,9 @@ function createWindow() {
         icon: __dirname + "/assets/icons/png/icon48.png",
         webPreferences: {
             nodeIntegration: true
-        }
+        },
+        show: false
     });
-    mainWindow.maximize();
 
     // and load the index.html of the app.
     mainWindow.loadFile('src/html/index.html');
@@ -44,6 +44,14 @@ function createWindow() {
         // in an array if your app supports multi windows, this is the time
         // when you should delete the corresponding element.
         mainWindow = null;
+    });
+
+    mainWindow.once("ready-to-show", () => {
+        setTimeout(() => {
+            splashWindow.destroy();
+            mainWindow.show();
+            mainWindow.maximize();
+        }, 2000);
     });
 
     // Create menu bar
@@ -93,10 +101,42 @@ function createMenu() {
     return menuTemplate;
 }
 
+function createSplashWindow() {
+    // Create the browser window.
+    splashWindow = new BrowserWindow({
+        width: 600,
+        height: 550,
+        icon: __dirname + "/assets/icons/png/icon48.png",
+        frame: false,
+        webPreferences: {
+            nodeIntegration: false
+        },
+        show: false
+    });
+
+    // and load the index.html of the app.
+    splashWindow.loadFile('src/html/splash.html');
+
+    splashWindow.once("ready-to-show", () => {
+        splashWindow.show();
+    });
+
+    // Emitted when the window is closed.
+    splashWindow.on('closed', function () {
+        // Dereference the window object, usually you would store windows
+        // in an array if your app supports multi windows, this is the time
+        // when you should delete the corresponding element.
+        splashWindow = null;
+    });
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+    createSplashWindow();
+    createMainWindow();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -105,13 +145,13 @@ app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
         app.quit();
     }
-})
+});
 
 app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) {
-        createWindow();
+        createMainWindow();
     }
 });
 
