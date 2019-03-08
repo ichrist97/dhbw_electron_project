@@ -223,17 +223,13 @@ $("#linkFinance").on("click", () => {
 function selectTab(selector) {
     //remove active from every tab
     let tabs = document.querySelectorAll(".tabs");
-    for (let i = 0; i < tabs; i++) {
+    for (let i = 0; i < tabs.length; i++) {
         let link = tabs[i].getElementsByTagName("a")[0];
         link.classList.remove("active");
     }
     //select new active tab
     let el = document.querySelector(`#${selector}`).getElementsByTagName("a")[0];
-    console.log(document.querySelector(`#${selector}`))
-    console.log(el)
-    console.log(selector)
     el.className += " active";
-    console.log(el.className)
     //refresh materialize
     M.Tabs.init(document.querySelectorAll(".tabs"), {});
 }
