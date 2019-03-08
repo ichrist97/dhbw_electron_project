@@ -1,3 +1,24 @@
 #title {
     width: 100%;
 }
+
+body {
+    background-color: rgba(77, 182, 172, 0.6);
+}
+
+#icon {
+    width: 200pt;
+}
+
+/* Scrollbar Background */
+::-webkit-scrollbar {
+    inset: 0 0 6pt;
+    width: 12px;
+    background-color: #212121;
+    transition: all 250 ease;
+}
+
+/*Scrollbar button*/
+::-webkit-scrollbar-thumb {
+    background-color: #4db6ac;
+}

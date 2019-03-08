@@ -49,6 +49,7 @@ function createMainWindow() {
     mainWindow.once("ready-to-show", () => {
         setTimeout(() => {
             splashWindow.destroy();
+            splashWindow = null;
             mainWindow.show();
             mainWindow.maximize();
         }, 2000);
@@ -155,45 +156,10 @@ app.on('activate', function () {
     }
 });
 
-// Catch entry:add msg
-ipcMain.on("entry:add", function (event, entry) {
-    mainWindow.webContents.send("entry:add", entry);
-    addEntryWindow.close();
-    // Still have a reference to addWindow in memory. Need to reclaim memory (Garbage collection)
-    addEntryWindow = null;
-});
-
-//catch addEntryWindow msg
-ipcMain.on("openAddEntryWindow", (event) => {
-    addEntryWindow = new BrowserWindow({
-        width: 500,
-        height: 400,
-        title: 'Zählerstandeintrag erstellen...',
-        parent: mainWindow,
-        modal: true,
-        show: false,
-        frameless
-    });
-    addEntryWindow.setMenu(null);
-    addEntryWindow.isResizable(false);
-
-    addEntryWindow.loadFile("src/html/addEntry.html");
-
-    //show
-    addEntryWindow.once("ready-to-show", () => {
-        addEntryWindow.show();
-    });
-
-    // Handle garbage collection
-    addEntryWindow.on('close', function () {
-        addEntryWindow = null;
-    });
-});
-
 function openAboutWindow() {
     aboutWindow = new BrowserWindow({
-        width: 500,
-        height: 400,
+        width: 480,
+        height: 480,
         title: 'Über',
         parent: mainWindow,
         modal: true,
@@ -215,3 +181,9 @@ function openAboutWindow() {
         aboutWindow = null;
     });
 }
+
+// Close about window
+ipcMain.on("closeAbout", (event) => {
+    aboutWindow.destroy();
+    aboutWindow = null;
+});
