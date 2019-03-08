@@ -171,7 +171,8 @@ ipcMain.on("openAddEntryWindow", (event) => {
         title: 'Zählerstandeintrag erstellen...',
         parent: mainWindow,
         modal: true,
-        show: false
+        show: false,
+        frameless
     });
     addEntryWindow.setMenu(null);
     addEntryWindow.isResizable(false);
@@ -196,7 +197,8 @@ function openAboutWindow() {
         title: 'Über',
         parent: mainWindow,
         modal: true,
-        show: false
+        show: false,
+        frame: false
     });
 
     aboutWindow.loadFile("src/html/about.html");

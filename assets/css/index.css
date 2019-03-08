@@ -32,6 +32,7 @@ body .row {
 
 /* Scrollbar Background */
 ::-webkit-scrollbar {
+    inset: 0 0 6pt;
     width: 12px;
     background-color: #212121;
     transition: all 250 ease;
@@ -275,4 +276,20 @@ table .btn-small {
     -webkit-filter: blur(1pt);
     -webkit-transition: -webkit-filter .50s;
     pointer-events: none;
+}
+
+.inline-icon {
+    vertical-align: middle;
+    font-size: 16pt !important;
+    display: inline-flex;
+    padding-bottom: 4pt;
+    padding-right: 4pt;
+}
+
+#start-icon {
+    vertical-align: middle;
+    font-size: 16pt !important;
+    display: inline-flex;
+    padding-bottom: 16pt;
+    padding-right: 4pt;
 }

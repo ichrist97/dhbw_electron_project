@@ -18,9 +18,7 @@ $(document).ready(() => {
 
     //init tabs
     let elemsTabs = document.querySelectorAll(".tabs");
-    let instanceTabs = M.Tabs.init(elemsTabs, {
-        swipeable: false
-    });
+    let instanceTabs = M.Tabs.init(elemsTabs, {});
 
     //init fixed action button
     let elemsFixedBtn = document.querySelectorAll('.fixed-action-btn');
@@ -94,44 +92,6 @@ $(document).ready(() => {
         }
     });
 });
-
-//Mapping of counter types to related foreign key id in database
-const typeMap = new Map();
-typeMap.set("Wasser", 1);
-typeMap.set("Strom", 2);
-typeMap.set("Strom", 3);
-
-function addTableEntry() {
-    //create database entry
-    let tableName = "zählerstand";
-    let counterType = typeMap.get(entry.type);
-
-    let paramName = ["zählernummer", "datum", "verbrauch", "zählertyp_id"];
-    let values = [entry.counterNr, entry.date, entry.amount, counterType];
-
-    insertDatabase(tableName, paramName, values);
-
-    // get reference to wanted table
-    let tbody;
-    console.log(entry);
-    if (entry.type === "Wasser") {
-        tbody = document.getElementById("tbodyWasser");
-    } else if (entry.type === "Strom") {
-        tbody = document.getElementById("tbodyStrom");
-    } else if (entry.type === "Gas") {
-        tbody = document.getElementById("tbodyGas");
-    } else {
-        console.log("No tbody found");
-    }
-
-    // create table row
-    let editBtn = `<button class="btn-small waves-effect waves-light teal lighten-2">
-                        <i class="material-icons">mode_edit</i>
-                    </button>`;
-
-    let htmlString = `<tr><td>${entry.counterNr}</td><td>${entry.date}</td><td>${entry.amount}</td><td>${editBtn}</td></tr>`;
-    tbody.innerHTML += htmlString;
-}
 
 function initInputStyle() {
     //change style of all readonly inputs to seperate them visually from the normal inputs
@@ -246,3 +206,34 @@ $("#closeModalEntry").on("click", () => {
     //clear select
     document.getElementById("modalAddEntry").querySelector("select").selectedIndex = 0;
 });
+
+//start links
+$("#linkEntry").on("click", () => {
+    selectTab("tabEntry");
+});
+
+$("#linkDashboard").on("click", () => {
+    selectTab("tabDashboard");
+});
+
+$("#linkFinance").on("click", () => {
+    selectTab("tabFinance");
+});
+
+function selectTab(selector) {
+    //remove active from every tab
+    let tabs = document.querySelectorAll(".tabs");
+    for (let i = 0; i < tabs; i++) {
+        let link = tabs[i].getElementsByTagName("a")[0];
+        link.classList.remove("active");
+    }
+    //select new active tab
+    let el = document.querySelector(`#${selector}`).getElementsByTagName("a")[0];
+    console.log(document.querySelector(`#${selector}`))
+    console.log(el)
+    console.log(selector)
+    el.className += " active";
+    console.log(el.className)
+    //refresh materialize
+    M.Tabs.init(document.querySelectorAll(".tabs"), {});
+}

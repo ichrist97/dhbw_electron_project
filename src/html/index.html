@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Nebenkosten Helper</title>
+    <title>Utility Manager</title>
 
     <link rel="stylesheet" href="../../assets/css/materialize.min.css">
     <link rel="stylesheet" href="../../assets/css/index.css">
@@ -17,11 +17,118 @@
     <div class="row page">
         <div id="tabRow" class="col s12">
             <ul class="tabs z-depth-1">
-                <li class="tab col s4 grey darken-4"><a class="white-text" href="#data">Zählerstände</a></li>
-                <li class="tab col s4 grey darken-4"><a class="active white-text" href="#dashboard">Dashboard</a></li>
-                <li class="tab col s4 grey darken-4"><a class="white-text" href="#finanzen">Finanzstatus</a></li>
+                <li id="tabStart" class="tab col s3 grey darken-4">
+                    <a class="active white-text" href="#start"><i class="material-icons inline-icon">home</i>Start</a>
+                </li>
+                <li id="tabEntry" class="tab col s3 grey darken-4">
+                    <a class="white-text" href="#data"><i class="material-icons inline-icon">input</i>Zählerstände</a>
+                </li>
+                <li id="tabDashboard" class="tab col s3 grey darken-4">
+                    <a class="white-text" href="#dashboard"><i class="material-icons inline-icon">dashboard</i>Dashboard</a>
+                </li>
+                <li id="tabFinance" class="tab col s3 grey darken-4">
+                    <a class="white-text" href="#finanzen"><i class="material-icons inline-icon">attach_money</i>Finanzstatus</a>
+                </li>
             </ul>
         </div>
+
+        <!-- Start tab -->
+        <div id="start" class="col s12 tabContent">
+            <div class="container center">
+                <h1><img id="start-icon" src="../../assets/icons/png/icon96.png">Utility Manager</h1>
+                <hr>
+                <br>
+                <h3>Nebenkosten berechnen</h3>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="card medium z-depth-2">
+                            <div class="card-image">
+                                <img src="../../assets/img/faucet.jpg">
+                                <span class="card-title">Wasser</span>
+                            </div>
+                            <div class="card-content">
+                                <p>Berechen Sie die anfallenden Gebühren für ihr Brauchwasser,
+                                    Abwasser und
+                                    Niederschlagswasser.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="card medium z-depth-2">
+                            <div class="card-image">
+                                <img src="../../assets/img/power.jpg">
+                                <span class="card-title">Strom</span>
+                            </div>
+                            <div class="card-content">
+                                <p>Berechnen Sie ihre Gebühren für den verbrauchten Strom. Inklusive anfallender Strom-
+                                    und Umsatzsteuer.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="card medium z-depth-2">
+                            <div class="card-image">
+                                <img src="../../assets/img/heater.jpg">
+                                <span class="card-title">Gas</span>
+                            </div>
+                            <div class="card-content">
+                                <p>Berechnen Sie ihre Gebühren für das verbrauchte Erdgas. Inklusive anfallende Erdgas-
+                                    und Umsatzsteuer.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <br>
+                <h3>Funktionen</h3>
+                <div class="row">
+                    <div class="col s4">
+                        <div class="card z-depth-2">
+                            <div class="card-content">
+                                <span class="card-title">Zählerstände verwalten</span>
+                                <p>Hier können sie ihr Zählerstände verwalten. Diese stellen das Fundament der
+                                    Nebenkostenberechnung dar. Sie können täglich neue Zählerstände eintragen und so
+                                    die Nebenkostenberechnung genauer gestalten. Bei einem Eingabefehler können sie
+                                    Zählerstände auch im Nachhinein noch bearbeiten oder komplett löschen.</p>
+                            </div>
+                            <div class="card-action">
+                                <button id="linkEntry" class="btn-flat teal-text lighten-2 bold">Mehr dazu <i class="material-icons inline-icon">chevron_right</i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="card z-depth-2">
+                            <div class="card-content">
+                                <span class="card-title">Graphische Verbrauchsübersicht</span>
+                                <p>Ein Bild sagt mehr als tausend Worte. Hier können sie ihren Verbrauchsverlauf für
+                                    alle Nebenkostenarten graphisch betrachten. Der Betrachtungszeitraum ist frei
+                                    wählbar.</p>
+                            </div>
+                            <div class="card-action">
+                                <button id="linkDashboard" class="btn-flat teal-text lighten-2 bold">Mehr dazu <i class="material-icons inline-icon">chevron_right</i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s4">
+                        <div class="card z-depth-2">
+                            <div class="card-content">
+                                <span class="card-title">Finanzstatus</span>
+                                <p>Nachdem Sie ihre Zählerstände eines vergangen Zeitraums eingegeben haben, können Sie
+                                    hier ihre anfallenden Nebenkosten berechnen. Das Programm unterstützt sie
+                                    automatisch, indem es Ihnen den Verbrauch der ausgewählten Abrechnungsperiode
+                                    errechnet. Sie müssen nur zusätzliche anfallende Gebühren aus ihren Verträgen
+                                    ergänzen. Anschließend sehen sie ihre Kosten auf die Periode zugeschnitten.</p>
+                            </div>
+                            <div class="card-action">
+                                <button id="linkFinance" class="btn-flat teal-text lighten-2 bold">Mehr dazu
+                                    <i class="material-icons inline-icon">chevron_right</i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!-- Data Tab -->
         <div id="data" class="col s12 tabContent">
@@ -48,11 +155,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <!--
-                <br>
-                <hr>
-                <h6><span class="bold teal-text lighten-2">Filter</span></h6>
-                -->
             </div>
 
             <div id="tableContainer">
