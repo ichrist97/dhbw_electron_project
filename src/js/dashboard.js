@@ -86,6 +86,9 @@ let waterConfig = {
         }
     },
     scaleX: {
+        label: {
+            text: "Zeitraum"
+        },
         zooming: true,
         minValue: null,
         step: 'day',
@@ -99,6 +102,10 @@ let waterConfig = {
         lineStyle: "solid"
     },
     scaleY: {
+        label: {
+            text: "Verbrauch"
+        },
+        format: "%v m³",
         minorTicks: 1,
         tick: {
             lineColor: '#00000'
@@ -196,6 +203,7 @@ function initPowerChart() {
             return;
         }
         let valueArr = [];
+        let counterNr;
         Array.from(result).forEach((row, index) => {
             //get unix timestamp in ms
             let part = row.formatDate.split("-", 3);
@@ -208,9 +216,11 @@ function initPowerChart() {
             //write to subarray
             let subArray = [timestamp, row.verbrauch];
             valueArr.push(subArray);
+            counterNr = row.zaehlernummer;
         });
         let seriesData = [{
             values: valueArr,
+            text: counterNr,
             lineColor: '#4db6ac',
             marker: {
                 backgroundColor: '#4db6ac'
@@ -239,7 +249,7 @@ let powerConfig = {
         align: 'center',
         verticalAlign: 'top',
         backgroundColor: 'none',
-        borderWidth: 0,
+        borderWidth: 1,
         item: {
             fontColor: '#fffff',
             cursor: 'hand'
@@ -262,6 +272,9 @@ let powerConfig = {
         }
     },
     scaleX: {
+        label: {
+            text: "Zeitraum"
+        },
         zooming: true,
         minValue: null,
         step: 'day',
@@ -275,6 +288,10 @@ let powerConfig = {
         lineStyle: "solid"
     },
     scaleY: {
+        label: {
+            text: "Verbrauch"
+        },
+        format: "%v kWh",
         minorTicks: 1,
         tick: {
             lineColor: '#00000'
@@ -372,6 +389,7 @@ function initGasChart() {
             return;
         }
         let valueArr = [];
+        let counterNr;
         Array.from(result).forEach((row, index) => {
             //get unix timestamp in ms
             let part = row.formatDate.split("-", 3);
@@ -384,9 +402,11 @@ function initGasChart() {
             //write to subarray
             let subArray = [timestamp, row.verbrauch];
             valueArr.push(subArray);
+            counterNr = row.zaehlernummer;
         });
         let seriesData = [{
             values: valueArr,
+            text: counterNr,
             lineColor: '#4db6ac',
             marker: {
                 backgroundColor: '#4db6ac'
@@ -415,7 +435,7 @@ let gasConfig = {
         align: 'center',
         verticalAlign: 'top',
         backgroundColor: 'none',
-        borderWidth: 0,
+        borderWidth: 1,
         item: {
             fontColor: '#fffff',
             cursor: 'hand'
@@ -438,6 +458,9 @@ let gasConfig = {
         }
     },
     scaleX: {
+        label: {
+            text: "Zeitraum"
+        },
         zooming: true,
         minValue: null,
         step: 'day',
@@ -451,6 +474,10 @@ let gasConfig = {
         lineStyle: "solid"
     },
     scaleY: {
+        label: {
+            text: "Verbrauch"
+        },
+        format: "%v kWh",
         minorTicks: 1,
         tick: {
             lineColor: '#00000'

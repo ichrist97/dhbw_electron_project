@@ -14,12 +14,12 @@ function getInstallerConfig() {
     const outPath = path.join(rootPath, 'release-builds');
 
     return Promise.resolve({
-        appDirectory: path.join(outPath, 'Utility-Manager-win32-ia32/'),
+        appDirectory: path.join(outPath, 'dhbw_electron_project/'),
         authors: 'Ivo Christ',
         noMsi: true,
         outputDirectory: path.join(outPath, 'windows-installer'),
-        exe: 'Utility-manager.exe',
-        setupExe: 'utility-manager-installer.exe',
+        exe: 'dhbw_electron_project.exe',
+        setupExe: 'UtilityManager-Installer.exe',
         setupIcon: path.join(rootPath, 'assets', 'icons', 'win', 'icon48.ico')
     });
 }

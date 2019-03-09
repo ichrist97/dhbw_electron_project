@@ -293,3 +293,8 @@ table .btn-small {
     padding-bottom: 16pt;
     padding-right: 4pt;
 }
+
+body .modal {
+    max-height: 100%;
+    overflow: visible;
+}
