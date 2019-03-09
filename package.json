@@ -6,12 +6,9 @@
   "scripts": {
     "start": "electron .",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon48.icns --prune=true --out=release-builds",
-    "package-win": "electron-packager . dhbw_electron_project --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon48.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Utility Manager\"",
+    "package-win": "electron-packager . utility_manager --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon48.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Utility Manager\"",
     "package-linux": "electron-packager . dhbw_electron_project --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon48.png --prune=true --out=release-builds",
-    "create-installer-win": "node installers/windows/createWinInstaller.js",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "postinstall": "electron-builder install-app-deps"
+    "create-installer-win": "node installers/windows/createWinInstaller.js"
   },
   "repository": {
     "type": "git",
@@ -32,14 +29,7 @@
   },
   "devDependencies": {
     "electron": "^4.0.7",
-    "electron-builder": "^20.38.5",
     "electron-packager": "^13.0.1",
-    "electron-squirrel-startup": "^1.0.0",
     "electron-winstaller": "^3.0.4"
-  },
-  "build": {
-    "appId": "com.ivochrist.utilitymanager",
-    "productName": "Utiltiy Manager",
-    "copyright": "Copyright © 2019 Ivo Christ"
   }
 }
