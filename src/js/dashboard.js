@@ -49,6 +49,12 @@ function initWaterChart() {
     });
 }
 
+function refreshWaterChart() {
+    waterConfig.series = null;
+    initWaterChart();
+    console.log("refresh dash")
+}
+
 let waterConfig = {
     type: 'line',
     backgroundColor: '#fff',

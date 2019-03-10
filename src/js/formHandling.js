@@ -173,7 +173,7 @@ function pullDataForWater() {
         let priceAvg = calcPriceAvg(dataForAvg);
         $("#priceWater").text(priceAvg.toFixed(2));
         //volume average
-        let volumeAvg = volume / resultLength;
+        let volumeAvg = volume / periodLength;
         $("#avgVolumeWater").text(volumeAvg.toFixed(2));
         //set volume
         $("#volumeWater").text(volume.toFixed(2));
@@ -372,7 +372,7 @@ function pullDataForPower() {
         priceAvg /= 100; //convert from cent to euro
         $("#pricePower").text(priceAvg.toFixed(2));
         //volume average
-        let volumeAvg = volume / resultLength;
+        let volumeAvg = volume / periodLength;
         $("#avgVolumePower").text(volumeAvg.toFixed(2));
         //set volume
         $("#volumePower").text(volume);
