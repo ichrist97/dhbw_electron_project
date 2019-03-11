@@ -4,6 +4,56 @@ $(document).ready(() => {
     initGasChart();
 });
 
+function refreshChart(chartType, entry, counterNr) {
+    let graphId;
+    switch (chartType) {
+        case "Wasser":
+            graphId = "waterChart";
+            break;
+        case "Strom":
+            graphId = "powerChart";
+            break;
+        case "Gas":
+            graphId = "gasChart";
+            break;
+        default:
+            graphId = null;
+            break;
+    }
+    console.log(entry);
+
+    //get unix timestamp in ms
+    let part = entry.date.split("-", 3);
+    let timestamp = new Date(part[0], part[1], part[2]).getTime();
+    /*
+
+    //get current data and update
+    let series = zingchart.exec(graphId, "getseriesvalues", {});
+    console.log(series);
+    series.push([timestamp, parseInt(entry.amount)]);
+    console.log(series);
+
+    //append new data to chart
+    zingchart.exec(graphId, 'appendseriesdata', {
+        data: {
+            values: data,
+            text: counterNr,
+            lineColor: '#4db6ac',
+            marker: {
+                backgroundColor: '#4db6ac'
+            }
+        }
+    });
+*/
+
+    //append value to char
+    zingchart.exec(graphId, 'appendseriesvalues', {
+        values: [
+            [timestamp, parseInt(entry.amount)]
+        ]
+    });
+}
+
 function initWaterChart() {
     let query = `SELECT zaehlernummer, verbrauch, DATE_FORMAT(datum,\"%Y-%m-%d\") AS formatDate
                 FROM zaehlerstand
@@ -47,12 +97,6 @@ function initWaterChart() {
             data: waterConfig,
         });
     });
-}
-
-function refreshWaterChart() {
-    waterConfig.series = null;
-    initWaterChart();
-    console.log("refresh dash")
 }
 
 let waterConfig = {

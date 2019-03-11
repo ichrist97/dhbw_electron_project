@@ -18,6 +18,8 @@ $(document).ready(() => {
     initCounterSelect();
 });
 
+
+
 function initCsvWriter(path) {
     csvWriter = createCsvWriter({
         path: `${path}\\export.csv`,
@@ -104,6 +106,27 @@ function loadExistingData() {
     });
 }
 
+function refreshCounterSelects(type, counterNr) {
+    if (type === 1) { //water
+        if (document.getElementById("selectCounterWater").value !== counterNr) {
+            $("#selectCounterWater").append($(`<option value="${counterNr}">${counterNr}</option>`));
+            //update materialize select
+            let selectElem = document.querySelectorAll("#selectCounterWater");
+            M.FormSelect.init(selectElem, {});
+        }
+    } else if (type === 2) { //power
+        $("#selectCounterPower").append($(`<option value="${counterNr}">${counterNr}</option>`));
+        //update materialize select
+        let selectElem = document.querySelectorAll("#selectCounterPower");
+        M.FormSelect.init(selectElem, {});
+    } else if (type === 3) { //gas
+        $("#selectCounterGas").append($(`<option value="${counterNr}">${counterNr}</option>`));
+        //update materialize select
+        let selectElem = document.querySelectorAll("#selectCounterGas");
+        M.FormSelect.init(selectElem, {});
+    }
+}
+
 $("#btnAddEntry").on("click", () => {
     //get data from modal
     let type = $("#type").val();
@@ -143,6 +166,15 @@ $("#btnAddEntry").on("click", () => {
         console.log("Succesfully inserted into database");
     });
     refreshTable();
+    //in dashboard.js
+    let entry = {
+        date: formatDateToSQL(datum),
+        amount: verbrauch
+    };
+    refreshChart(type, entry, zählernr);
+
+    //refresh counter selects in finance
+    refreshCounterSelects(foreignKey);
 
     M.toast({
         html: 'Zählerstand eingetragen'
