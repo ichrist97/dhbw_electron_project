@@ -22,7 +22,6 @@ $("#selectPeriod").on("click", () => {
         periodLength = getDateDifference(begin, end);
         $("#periodLength").text(periodLength);
 
-        //initDataWater(1);
         pullDataForWater();
         pullDataForPower();
         pullDataForGas();
@@ -112,6 +111,7 @@ function checkSelectedCounter() {
     return true;
 }
 
+//Currently not used
 function pullFormData(typeId) {
     return new Promise((resolve, reject) => {
         let begin = $("#zeitraumVon").val();
@@ -140,52 +140,6 @@ function pullFormData(typeId) {
             resolve(rows);
         });
     });
-}
-
-//replacement for pullDataWater; work in progress
-function initDataWater(typeId) {
-    console.log("init")
-    getChartData(typeId).then((rows) => {
-        //set data in form
-        let a = Array.from(rows);
-        let minVolume = 0;
-        let maxVolume = 1;
-        let resultLength = a.length;
-        let dataForAvg = [];
-
-        //loop through data
-        a.forEach((row, index) => {
-            console.log(row);
-            if (index === 0) { //first iteration
-                minVolume = row.verbrauch;
-            }
-            if (index === resultLength - 1) { //last iteration
-                maxVolume = row.verbrauch;
-            }
-            //calc avg
-            let item = {
-                price: row.preisProEinheit,
-                date: row.format
-            };
-            dataForAvg.push(item);
-        });
-        //delta of min and max
-        let volume = maxVolume - minVolume;
-        $("#volumeWater").text(volume.toFixed(2));
-        //price average
-        let priceAvg = calcPriceAvg(dataForAvg);
-        $("#priceWater").text(priceAvg.toFixed(2));
-        //volume average
-        let volumeAvg = volume / periodLength;
-        $("#avgVolumeWater").text(volumeAvg.toFixed(2));
-        //set volume
-        $("#volumeWater").text(volume.toFixed(2));
-        //set useWater fee
-        let fee = volume * priceAvg;
-        $("#feeUseWater").text(fee.toFixed(2));
-    }).catch((err) => setImmediate(() => {
-        throw err;
-    })); // Throw async to escape the promise chain
 }
 
 /*

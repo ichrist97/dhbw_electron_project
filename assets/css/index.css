@@ -47,6 +47,15 @@ html {
 /*Scrollbar button*/
 ::-webkit-scrollbar-thumb {
     background-color: #4db6ac;
+
+    height: 6pt;
+    border: 2pt solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    -webkit-border-radius: 10pt;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: transparent;
 }
 
 /* Tabs Color Materialize Overwrite */
@@ -315,11 +324,4 @@ body .modal {
     background-color: #212121;
     margin-top: 20pt;
     margin-bottom: 20pt;
-}
-
-.chart {
-    /*
-    margin-left: 20pt;
-    margin-right: 20pt;
-    */
 }
