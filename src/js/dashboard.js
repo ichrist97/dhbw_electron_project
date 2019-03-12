@@ -133,14 +133,15 @@ let waterConfig = {
         }
     },
     plotarea: {
-        margin: 'dynamic 70'
+        marginLeft: 'dynamic',
+        marginRight: '60pt'
     },
     plot: {
         aspect: 'segmented',
         lineWidth: 4,
         marker: {
             borderWidth: 1,
-            size: 8,
+            size: 6,
             borderColor: "#212121"
         }
     },
@@ -284,7 +285,7 @@ let powerConfig = {
         lineWidth: 4,
         marker: {
             borderWidth: 1,
-            size: 8,
+            size: 6,
             borderColor: "#212121"
         }
     },
@@ -428,7 +429,7 @@ let gasConfig = {
         lineWidth: 4,
         marker: {
             borderWidth: 1,
-            size: 8,
+            size: 6,
             borderColor: "#212121"
         }
     },
