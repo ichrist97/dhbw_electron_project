@@ -298,3 +298,10 @@ body .modal {
     max-height: 100%;
     overflow: visible;
 }
+
+.graph-divider {
+    height: 2pt;
+    background-color: #212121;
+    margin-top: 20pt;
+    margin-bottom: 20pt;
+}

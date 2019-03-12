@@ -1,8 +1,78 @@
 $(document).ready(() => {
-    initWaterChart();
-    initPowerChart();
-    initGasChart();
+    initChart("waterChart", waterConfig);
+    initChart("powerChart", powerConfig);
+    initChart("gasChart", gasConfig);
 });
+
+function getChartData(typeId) {
+    return new Promise((resolve, reject) => {
+        let query = `SELECT zaehlernummer, verbrauch, DATE_FORMAT(datum,\"%Y-%m-%d\") AS formatDate
+                FROM zaehlerstand
+                WHERE zaehlertyp_id = ${typeId}
+                ORDER BY datum;`;
+
+        connection.query(query, (err, rows, fields) => {
+            // Call reject on error states,
+            // call resolve with results
+            if (err) {
+                return reject(err);
+            }
+            resolve(rows);
+        });
+    });
+}
+
+function initChart(chartId, chartConfig) {
+    let typeId;
+    switch (chartId) {
+        case "waterChart":
+            typeId = 1;
+            break;
+        case "powerChart":
+            typeId = 2;
+            break;
+        case "gasChart":
+            typeId = 3;
+            break;
+    }
+    getChartData(typeId).then((rows) => {
+        let valueArr = [];
+        let counterNr;
+
+        Array.from(rows).forEach((row, index) => {
+            //get unix timestamp in ms
+            let part = row.formatDate.split("-", 3);
+            let timestamp = new Date(part[0], part[1], part[2]).getTime();
+
+            if (index === 0) { //set min value for chart
+                chartConfig.scaleX.minValue = timestamp;
+            }
+
+            //write to subarray
+            let subArray = [timestamp, row.verbrauch];
+            valueArr.push(subArray);
+
+            counterNr = row.zaehlernummer;
+        });
+
+        let seriesData = [{
+            values: valueArr,
+            text: counterNr,
+            lineColor: '#4db6ac',
+            marker: {
+                backgroundColor: '#4db6ac'
+            }
+        }];
+        chartConfig.series = seriesData;
+
+        zingchart.render({
+            id: chartId,
+            data: chartConfig,
+        });
+    }).catch((err) => setImmediate(() => {
+        throw err;
+    })); // Throw async to escape the promise chain
+}
 
 function refreshChart(chartType, entry, counterNr) {
     let graphId;
@@ -25,77 +95,13 @@ function refreshChart(chartType, entry, counterNr) {
     //get unix timestamp in ms
     let part = entry.date.split("-", 3);
     let timestamp = new Date(part[0], part[1], part[2]).getTime();
-    /*
-
-    //get current data and update
-    let series = zingchart.exec(graphId, "getseriesvalues", {});
-    console.log(series);
-    series.push([timestamp, parseInt(entry.amount)]);
-    console.log(series);
-
-    //append new data to chart
-    zingchart.exec(graphId, 'appendseriesdata', {
-        data: {
-            values: data,
-            text: counterNr,
-            lineColor: '#4db6ac',
-            marker: {
-                backgroundColor: '#4db6ac'
-            }
-        }
-    });
-*/
 
     //append value to char
     zingchart.exec(graphId, 'appendseriesvalues', {
+        plotindex: 0,
         values: [
             [timestamp, parseInt(entry.amount)]
         ]
-    });
-}
-
-function initWaterChart() {
-    let query = `SELECT zaehlernummer, verbrauch, DATE_FORMAT(datum,\"%Y-%m-%d\") AS formatDate
-                FROM zaehlerstand
-                WHERE zaehlertyp_id = 1
-                ORDER BY datum;`;
-    connection.query(query, (err, result) => {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        }
-        let valueArr = [];
-        let counterNr;
-        Array.from(result).forEach((row, index) => {
-            //get unix timestamp in ms
-            let part = row.formatDate.split("-", 3);
-            let timestamp = new Date(part[0], part[1], part[2]).getTime();
-
-            if (index === 0) { //set min value for chart
-                waterConfig.scaleX.minValue = timestamp;
-            }
-
-            //write to subarray
-            let subArray = [timestamp, row.verbrauch];
-            valueArr.push(subArray);
-
-            counterNr = row.zaehlernummer;
-        });
-        let seriesData = [{
-            values: valueArr,
-            text: counterNr,
-            lineColor: '#4db6ac',
-            marker: {
-                backgroundColor: '#4db6ac'
-            }
-        }];
-        waterConfig.series = seriesData;
-
-        zingchart.render({
-            id: 'waterChart',
-            data: waterConfig,
-        });
     });
 }
 
@@ -241,50 +247,6 @@ zingchart.bind('waterChart', 'shape_click', function (p) {
     }
 });
 
-function initPowerChart() {
-    let query = `SELECT zaehlernummer, verbrauch, DATE_FORMAT(datum,\"%Y-%m-%d\") AS formatDate
-                FROM zaehlerstand
-                WHERE zaehlertyp_id = 2
-                ORDER BY datum;`;
-    connection.query(query, (err, result) => {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        }
-        let valueArr = [];
-        let counterNr;
-        Array.from(result).forEach((row, index) => {
-            //get unix timestamp in ms
-            let part = row.formatDate.split("-", 3);
-            let timestamp = new Date(part[0], part[1], part[2]).getTime();
-
-            if (index === 0) { //set min value for chart
-                powerConfig.scaleX.minValue = timestamp;
-            }
-
-            //write to subarray
-            let subArray = [timestamp, row.verbrauch];
-            valueArr.push(subArray);
-            counterNr = row.zaehlernummer;
-        });
-        let seriesData = [{
-            values: valueArr,
-            text: counterNr,
-            lineColor: '#4db6ac',
-            marker: {
-                backgroundColor: '#4db6ac'
-            }
-        }];
-        powerConfig.series = seriesData;
-
-        zingchart.render({
-            id: 'powerChart',
-            data: powerConfig,
-        });
-    });
-}
-
 let powerConfig = {
     type: 'line',
     backgroundColor: '#fff',
@@ -426,50 +388,6 @@ zingchart.bind('powerChart', 'shape_click', function (p) {
         zingchart.exec(p.id, 'viewall');
     }
 });
-
-function initGasChart() {
-    let query = `SELECT zaehlernummer, verbrauch, DATE_FORMAT(datum,\"%Y-%m-%d\") AS formatDate
-                FROM zaehlerstand
-                WHERE zaehlertyp_id = 3
-                ORDER BY datum;`;
-    connection.query(query, (err, result) => {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        }
-        let valueArr = [];
-        let counterNr;
-        Array.from(result).forEach((row, index) => {
-            //get unix timestamp in ms
-            let part = row.formatDate.split("-", 3);
-            let timestamp = new Date(part[0], part[1], part[2]).getTime();
-
-            if (index === 0) { //set min value for chart
-                gasConfig.scaleX.minValue = timestamp;
-            }
-
-            //write to subarray
-            let subArray = [timestamp, row.verbrauch];
-            valueArr.push(subArray);
-            counterNr = row.zaehlernummer;
-        });
-        let seriesData = [{
-            values: valueArr,
-            text: counterNr,
-            lineColor: '#4db6ac',
-            marker: {
-                backgroundColor: '#4db6ac'
-            }
-        }];
-        gasConfig.series = seriesData;
-
-        zingchart.render({
-            id: 'gasChart',
-            data: gasConfig,
-        });
-    });
-}
 
 let gasConfig = {
     type: 'line',

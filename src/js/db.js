@@ -18,8 +18,6 @@ $(document).ready(() => {
     initCounterSelect();
 });
 
-
-
 function initCsvWriter(path) {
     csvWriter = createCsvWriter({
         path: `${path}\\export.csv`,

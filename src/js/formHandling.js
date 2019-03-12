@@ -21,6 +21,8 @@ $("#selectPeriod").on("click", () => {
         let end = $("#zeitraumBis").val();
         periodLength = getDateDifference(begin, end);
         $("#periodLength").text(periodLength);
+
+        //initDataWater(1);
         pullDataForWater();
         pullDataForPower();
         pullDataForGas();
@@ -108,6 +110,82 @@ function checkSelectedCounter() {
     }
     //everything is not empty
     return true;
+}
+
+function pullFormData(typeId) {
+    return new Promise((resolve, reject) => {
+        let begin = $("#zeitraumVon").val();
+        let end = $("#zeitraumBis").val();
+        let formatDateBegin = formatDateToSQL(begin);
+        let formatDateEnd = formatDateToSQL(end);
+        formatDateBegin = mysql.escape(formatDateBegin);
+        formatDateEnd = mysql.escape(formatDateEnd);
+
+        //counterNr filter
+        let counterNr = $("#selectCounterWater").val();
+        counterNr = mysql.escape(counterNr);
+
+        let query = `SELECT zaehlernummer, DATE_FORMAT(datum, \"%d.%m.%Y\") AS format, verbrauch, preisProEinheit
+                FROM zaehlerstand
+                WHERE zaehlertyp_id = ${typeId} AND datum >= ${formatDateBegin} AND datum <= ${formatDateEnd}
+                AND zaehlernummer = ${counterNr}
+                ORDER BY datum ASC;`;
+
+        connection.query(query, (err, rows, fields) => {
+            // Call reject on error states,
+            // call resolve with results
+            if (err) {
+                return reject(err);
+            }
+            resolve(rows);
+        });
+    });
+}
+
+//replacement for pullDataWater; work in progress
+function initDataWater(typeId) {
+    console.log("init")
+    getChartData(typeId).then((rows) => {
+        //set data in form
+        let a = Array.from(rows);
+        let minVolume = 0;
+        let maxVolume = 1;
+        let resultLength = a.length;
+        let dataForAvg = [];
+
+        //loop through data
+        a.forEach((row, index) => {
+            console.log(row);
+            if (index === 0) { //first iteration
+                minVolume = row.verbrauch;
+            }
+            if (index === resultLength - 1) { //last iteration
+                maxVolume = row.verbrauch;
+            }
+            //calc avg
+            let item = {
+                price: row.preisProEinheit,
+                date: row.format
+            };
+            dataForAvg.push(item);
+        });
+        //delta of min and max
+        let volume = maxVolume - minVolume;
+        $("#volumeWater").text(volume.toFixed(2));
+        //price average
+        let priceAvg = calcPriceAvg(dataForAvg);
+        $("#priceWater").text(priceAvg.toFixed(2));
+        //volume average
+        let volumeAvg = volume / periodLength;
+        $("#avgVolumeWater").text(volumeAvg.toFixed(2));
+        //set volume
+        $("#volumeWater").text(volume.toFixed(2));
+        //set useWater fee
+        let fee = volume * priceAvg;
+        $("#feeUseWater").text(fee.toFixed(2));
+    }).catch((err) => setImmediate(() => {
+        throw err;
+    })); // Throw async to escape the promise chain
 }
 
 /*
