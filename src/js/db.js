@@ -15,7 +15,7 @@ const connection = mysql.createConnection({
 
 $(document).ready(() => {
     loadExistingData();
-    initCounterSelect();
+    loadCounterSelect();
 });
 
 function initCsvWriter(path) {
@@ -104,27 +104,6 @@ function loadExistingData() {
     });
 }
 
-function refreshCounterSelects(type, counterNr) {
-    if (type === 1) { //water
-        if (document.getElementById("selectCounterWater").value !== counterNr) {
-            $("#selectCounterWater").append($(`<option value="${counterNr}">${counterNr}</option>`));
-            //update materialize select
-            let selectElem = document.querySelectorAll("#selectCounterWater");
-            M.FormSelect.init(selectElem, {});
-        }
-    } else if (type === 2) { //power
-        $("#selectCounterPower").append($(`<option value="${counterNr}">${counterNr}</option>`));
-        //update materialize select
-        let selectElem = document.querySelectorAll("#selectCounterPower");
-        M.FormSelect.init(selectElem, {});
-    } else if (type === 3) { //gas
-        $("#selectCounterGas").append($(`<option value="${counterNr}">${counterNr}</option>`));
-        //update materialize select
-        let selectElem = document.querySelectorAll("#selectCounterGas");
-        M.FormSelect.init(selectElem, {});
-    }
-}
-
 $("#btnAddEntry").on("click", () => {
     //get data from modal
     let type = $("#type").val();
@@ -164,24 +143,38 @@ $("#btnAddEntry").on("click", () => {
         console.log("Succesfully inserted into database");
     });
     refreshTable();
-    //in dashboard.js
-    let entry = {
-        date: formatDateToSQL(datum),
-        amount: verbrauch
-    };
-    refreshChart(type, entry, zählernr);
 
-    //refresh counter selects in finance
-    refreshCounterSelects(foreignKey);
+    //refresh chart
+    let chartParam = getChartParams(type);
+    loadChart(chartParam);
+
+    //update selects in finance for counterNr
+    loadCounterSelect();
 
     M.toast({
         html: 'Zählerstand eingetragen'
     });
 });
 
+function getChartParams(type) {
+    let chartId;
+    switch (type) {
+        case "Wasser":
+            chartId = "waterChart";
+            break;
+        case "Strom":
+            chartId = "powerChart";
+            break;
+        case "Gas":
+            chartId = "gasChart";
+            break;
+    }
+    return chartId;
+}
+
 function createEditBtn(tbody, type) {
     let btn = document.createElement("a");
-    btn.className = "btn-small teal lighten-2 waves-effect waves-light modal-trigger btn-acc";
+    btn.className = "btn-small waves-effect waves-light modal-trigger btn-acc";
     btn.setAttribute("href", "#modalEditEntry");
     let icon = document.createElement("i");
     icon.className = "large material-icons";
@@ -248,7 +241,10 @@ $("#btnEditEntry").on("click", (event) => {
         }
         console.log("Updated entry in database");
     });
+
     refreshTable();
+    loadCounterSelect();
+
     M.toast({
         html: 'Zählerstand verändert'
     });
@@ -270,6 +266,15 @@ function createDelBtn(tbody) {
         let tr = event.currentTarget.parentElement.parentElement;
         let id = tr.childNodes[0].innerText;
         $("#delIdHolder").text(id);
+        let type;
+        if (tr.parentElement.id === "tbodyWasser") {
+            type = "Wasser";
+        } else if (tr.parentElement.id === "tbodyStrom") {
+            type = "Strom";
+        } else if (tr.parentElement.id === "tbodyGas") {
+            type = "Gas";
+        }
+        $("#delTypeHolder").text(type);
     });
 }
 
@@ -286,25 +291,45 @@ $("#deleteEntry").on("click", () => {
         }
         console.log("Deleted entry in database");
     });
+
     refreshTable();
+    loadCounterSelect();
+
+    //refresh chart
+    let chartParam = getChartParams($("#delTypeHolder").text());
+    loadChart(chartParam);
+
     M.toast({
         html: 'Zählerstand gelöscht'
     });
 });
 
-function initCounterSelect() {
-    let query = `SELECT DISTINCT zaehlernummer, zaehlertyp_id
-                FROM zaehlerstand
-                GROUP BY zaehlertyp_id;`;
-    //console.log(query);
-    connection.query(query, (err, result) => {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        }
-        let a = Array.from(result);
-        a.forEach((row) => {
+function getCounterNums() {
+    return new Promise((resolve, reject) => {
+        let query = `SELECT DISTINCT zaehlernummer, zaehlertyp_id
+                    FROM zaehlerstand;`;
+
+        connection.query(query, (err, rows, fields) => {
+            // Call reject on error states,
+            // call resolve with results
+            if (err) {
+                return reject(err);
+            }
+            resolve(rows);
+        });
+    });
+}
+
+function loadCounterSelect() {
+    //empty the selects
+    let selects = ["selectCounterWater", "selectCounterPower", "selectCounterGas"];
+    for (let i = 0; i < selects.length; i++) {
+        document.getElementById(selects[i]).innerHTML = `<option value="" disabled selected>Wähle deine Option</option>`;
+        M.FormSelect.init(selects[i], {});
+    }
+
+    getCounterNums().then((rows) => {
+        Array.from(rows).forEach((row) => {
             if (row.zaehlertyp_id == 1) { //water
                 $("#selectCounterWater").append($(`<option value="${row.zaehlernummer}">${row.zaehlernummer}</option>`));
                 //update materialize select
@@ -322,7 +347,9 @@ function initCounterSelect() {
                 M.FormSelect.init(selectElem, {});
             }
         });
-    });
+    }).catch((err) => setImmediate(() => {
+        throw err;
+    })); // Throw async to escape the promise chain
 }
 
 function formatDateToSQL(str) {

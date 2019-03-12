@@ -1,8 +1,17 @@
 $(document).ready(() => {
-    initChart("waterChart", waterConfig);
-    initChart("powerChart", powerConfig);
-    initChart("gasChart", gasConfig);
+    loadChart("waterChart");
+    loadChart("powerChart");
+    loadChart("gasChart");
 });
+
+//colors for the plot lines
+let colors = ["#4db6ac", "#644d6c", "#ffc107", "#4caf50", "#00bcd4", "#673ab7", "#f44336", "#e91e63"];
+let colorIndex = 0;
+
+let chartLoaded = new Map();
+chartLoaded.set("waterChart", false);
+chartLoaded.set("powerChart", false);
+chartLoaded.set("gasChart", false);
 
 function getChartData(typeId) {
     return new Promise((resolve, reject) => {
@@ -22,22 +31,26 @@ function getChartData(typeId) {
     });
 }
 
-function initChart(chartId, chartConfig) {
+function loadChart(chartId) {
     let typeId;
+    let chartConfig;
     switch (chartId) {
         case "waterChart":
             typeId = 1;
+            chartConfig = waterConfig;
             break;
         case "powerChart":
             typeId = 2;
+            chartConfig = powerConfig;
             break;
         case "gasChart":
             typeId = 3;
+            chartConfig = gasConfig;
             break;
     }
     getChartData(typeId).then((rows) => {
-        let valueArr = [];
-        let counterNr;
+        let seriesData = [];
+        let counterNrMap = new Map();
 
         Array.from(rows).forEach((row, index) => {
             //get unix timestamp in ms
@@ -48,61 +61,50 @@ function initChart(chartId, chartConfig) {
                 chartConfig.scaleX.minValue = timestamp;
             }
 
-            //write to subarray
-            let subArray = [timestamp, row.verbrauch];
-            valueArr.push(subArray);
-
-            counterNr = row.zaehlernummer;
-        });
-
-        let seriesData = [{
-            values: valueArr,
-            text: counterNr,
-            lineColor: '#4db6ac',
-            marker: {
-                backgroundColor: '#4db6ac'
+            //create map entry if key is not contained
+            if (!counterNrMap.has(row.zaehlernummer)) {
+                let values = [];
+                counterNrMap.set(row.zaehlernummer, values);
             }
-        }];
-        chartConfig.series = seriesData;
-
-        zingchart.render({
-            id: chartId,
-            data: chartConfig,
+            //push to related map entry
+            let valueSet = [timestamp, row.verbrauch];
+            counterNrMap.get(row.zaehlernummer).push(valueSet);
         });
+
+        //push content of map seriesData
+        counterNrMap.forEach((value, key) => {
+            let color = colors[colorIndex];
+            colorIndex = (colorIndex + 1) % colors.length;
+
+            let dataSet = {
+                values: value,
+                text: key,
+                lineColor: color,
+                marker: {
+                    backgroundColor: color
+                }
+            };
+            seriesData.push(dataSet);
+        });
+        //set back color index for new graph
+        colorIndex = 0;
+
+        if (!chartLoaded.get(chartId)) { //first load
+            //append to chart
+            chartConfig.series = seriesData;
+            zingchart.render({
+                id: chartId,
+                data: chartConfig
+            });
+            chartLoaded.set(chartId, true);
+        } else { //refresh
+            zingchart.exec(chartId, "setseriesdata", {
+                data: seriesData
+            });
+        }
     }).catch((err) => setImmediate(() => {
         throw err;
     })); // Throw async to escape the promise chain
-}
-
-function refreshChart(chartType, entry, counterNr) {
-    let graphId;
-    switch (chartType) {
-        case "Wasser":
-            graphId = "waterChart";
-            break;
-        case "Strom":
-            graphId = "powerChart";
-            break;
-        case "Gas":
-            graphId = "gasChart";
-            break;
-        default:
-            graphId = null;
-            break;
-    }
-    console.log(entry);
-
-    //get unix timestamp in ms
-    let part = entry.date.split("-", 3);
-    let timestamp = new Date(part[0], part[1], part[2]).getTime();
-
-    //append value to char
-    zingchart.exec(graphId, 'appendseriesvalues', {
-        plotindex: 0,
-        values: [
-            [timestamp, parseInt(entry.amount)]
-        ]
-    });
 }
 
 let waterConfig = {
@@ -135,10 +137,11 @@ let waterConfig = {
     },
     plot: {
         aspect: 'segmented',
-        lineWidth: 2,
+        lineWidth: 4,
         marker: {
-            borderWidth: 0,
-            size: 6
+            borderWidth: 1,
+            size: 8,
+            borderColor: "#212121"
         }
     },
     scaleX: {
@@ -273,14 +276,16 @@ let powerConfig = {
         }
     },
     plotarea: {
-        margin: 'dynamic 70'
+        marginLeft: 'dynamic',
+        marginRight: '60pt'
     },
     plot: {
         aspect: 'segmented',
-        lineWidth: 2,
+        lineWidth: 4,
         marker: {
-            borderWidth: 0,
-            size: 5
+            borderWidth: 1,
+            size: 8,
+            borderColor: "#212121"
         }
     },
     scaleX: {
@@ -415,14 +420,16 @@ let gasConfig = {
         }
     },
     plotarea: {
-        margin: 'dynamic 70'
+        marginLeft: 'dynamic',
+        marginRight: '60pt'
     },
     plot: {
         aspect: 'segmented',
-        lineWidth: 2,
+        lineWidth: 4,
         marker: {
-            borderWidth: 0,
-            size: 5
+            borderWidth: 1,
+            size: 8,
+            borderColor: "#212121"
         }
     },
     scaleX: {

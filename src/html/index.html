@@ -280,24 +280,26 @@
                     <div class="card teal lighten-2">
                         <div class="card-content white-text">
                             <span class="card-title">Graphische Übersicht</span>
-                            <p>Hier können sie ihre Verbrauchsverläufe graphisch betrachten. Wenn Sie einen neuen
-                                Zählerstand hinzufügen, wird dieser automatisch im Graphen angezeigt. Ein Bearbeitung
-                                oder Löschung eines alten Zählerstandes wird erst beim nächsten Stand der Anwendung
-                                sichtbar.</p>
+                            <p>Hier können sie ihre Verbrauchsverläufe graphisch betrachten. Wenn Sie
+                                einen neuen
+                                Zählerstand hinzufügen, bearbeiten oder löschen, wird dies auch sofort im jeweiligen
+                                Graphen angezeigt.<br><br>Bei jedem Graphen können Sie zudem den betrachteten Zeitraum
+                                unterhalb des Graphen einstellen. Soll wieder der gesamte Zeitraum angezeigt, dann kann
+                                dies rechts über dem Grapen geändert.</p>
                         </div>
                     </div>
                 </div>
             </div>
             <br>
-            <div id="waterChart"></div>
+            <div id="waterChart" class="chart"></div>
             <br>
             <hr class="graph-divider">
             <br>
-            <div id="powerChart"></div>
+            <div id="powerChart" class="chart"></div>
             <br>
             <hr class="graph-divider">
             <br>
-            <div id="gasChart"></div>
+            <div id="gasChart" class="chart"></div>
         </div>
 
         <div id="finanzen" class="col s12 tabContent">
@@ -794,6 +796,7 @@
             <!--Content-->
             <h6>Dieser Zählereintrag wird gelöscht</h6>
             <p id="delIdHolder" style="display:none"></p>
+            <p id="delTypeHolder" style="display:none"></p>
         </div>
         <hr style="width:90%;">
         <div class="modal-footer">
