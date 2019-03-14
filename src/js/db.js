@@ -105,56 +105,149 @@ function loadExistingData() {
 }
 
 $("#btnAddEntry").on("click", () => {
-    //get data from modal
-    let type = $("#type").val();
-    //convert type string to foreign key id in database
-    let foreignKey;
-    if (type === "Wasser") {
-        foreignKey = "1";
-    } else if (type === "Strom") {
-        foreignKey = "2";
-    } else if (type === "Gas") {
-        foreignKey = "3";
-    }
-    let zählernr = $("#zählernummer").val();
-    let datum = $("#datum").val();
-    let formattedDate = formatDateToSQL(datum);
-    let verbrauch = $("#verbrauch").val();
-    let preisProEinheit = $("#preisProEinheit").val();
-
-    //sql query
-    // let tableName = mysql.escape("zaehlerstand");
-    let param = ["zaehlernummer", "datum", "verbrauch", "zaehlertyp_id", "preisProEinheit"];
-    //escape inputs
-    values = [zählernr, formattedDate, verbrauch, foreignKey, preisProEinheit];
-    for (let i = 0; i < values.length; i++) {
-        values[i] = mysql.escape(values[i]);
-    }
-
-    let query = `INSERT INTO zaehlerstand (${param.join()}) VALUES (${values.join()})`;
-    //console.log(query);
-
-    connection.query(query, values, (err, result) => {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
+    if (validateAddEntryForm()) {
+        //get data from modal
+        let type = $("#type").val();
+        //convert type string to foreign key id in database
+        let foreignKey;
+        if (type === "Wasser") {
+            foreignKey = "1";
+        } else if (type === "Strom") {
+            foreignKey = "2";
+        } else if (type === "Gas") {
+            foreignKey = "3";
         }
-        console.log("Succesfully inserted into database");
-    });
-    refreshTable();
+        let zählernr = $("#zählernummer").val();
+        let datum = $("#datum").val();
+        let formattedDate = formatDateToSQL(datum);
+        let verbrauch = $("#verbrauch").val();
+        let preisProEinheit = $("#preisProEinheit").val();
 
-    //refresh chart
-    let chartParam = getChartParams(type);
-    loadChart(chartParam);
+        //sql query
+        // let tableName = mysql.escape("zaehlerstand");
+        let param = ["zaehlernummer", "datum", "verbrauch", "zaehlertyp_id", "preisProEinheit"];
+        //escape inputs
+        values = [zählernr, formattedDate, verbrauch, foreignKey, preisProEinheit];
+        for (let i = 0; i < values.length; i++) {
+            values[i] = mysql.escape(values[i]);
+        }
 
-    //update selects in finance for counterNr
-    loadCounterSelect();
+        let query = `INSERT INTO zaehlerstand (${param.join()}) VALUES (${values.join()})`;
+        //console.log(query);
 
-    M.toast({
-        html: 'Zählerstand eingetragen'
-    });
+        connection.query(query, values, (err, result) => {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            }
+            console.log("Succesfully inserted into database");
+        });
+        refreshTable();
+
+        //refresh chart
+        let chartParam = getChartParams(type);
+        loadChart(chartParam);
+
+        //update selects in finance for counterNr
+        loadCounterSelect();
+
+        //close modal
+        let elemModal = document.querySelector("#modalAddEntry");
+        let instanceAddModal = M.Modal.getInstance(elemModal);
+        instanceAddModal.close();
+
+        M.toast({
+            html: 'Zählerstand eingetragen'
+        });
+    }
 });
+
+//check if a value is given for every input; if not then tell the user via toast
+function validateAddEntryForm() {
+    //type is empty
+    if (isEmpty($("#type").val())) {
+        M.toast({
+            html: 'Keinen Typ ausgewählt'
+        });
+        return false;
+    }
+    //counterNr is empty
+    if (isEmpty($("#zählernummer").val())) {
+        M.toast({
+            html: 'Keine Zählernummer angegeben'
+        });
+        return false;
+    }
+    //date is empty
+    if (isEmpty($("#datum").val())) {
+        M.toast({
+            html: 'Kein Datum angegeben'
+        });
+        return false;
+    }
+    //usage amount is empty, negative or zero
+    let amount = $("#verbrauch").val();
+    if (isEmpty(amount) || amount <= 0) {
+        M.toast({
+            html: 'Kein gültiger Verbrauch angegeben'
+        });
+        return false;
+    }
+    //pricePerUnit is empty, negative or zero
+    let price = $("#preisProEinheit").val();
+    if (isEmpty(price) || price <= 0) {
+        M.toast({
+            html: 'Kein gültiger Preis pro Einheit angegeben'
+        });
+        return false;
+    }
+    //everything is valid
+    return true;
+}
+
+//check if a value is given for every input; if not then tell the user via toast
+function validateEditEntryForm() {
+    //type is empty
+    if (isEmpty($("#newType").val())) {
+        M.toast({
+            html: 'Keinen Typ ausgewählt'
+        });
+        return false;
+    }
+    //counterNr is empty
+    if (isEmpty($("#newZählernummer").val())) {
+        M.toast({
+            html: 'Keine Zählernummer angegeben'
+        });
+        return false;
+    }
+    //date is empty
+    if (isEmpty($("#newDatum").val())) {
+        M.toast({
+            html: 'Kein Datum angegeben'
+        });
+        return false;
+    }
+    //usage amount is empty, negative or zero
+    let amount = $("#newVerbrauch").val();
+    if (isEmpty(amount) || amount <= 0) {
+        M.toast({
+            html: 'Kein gültiger Verbrauch angegeben'
+        });
+        return false;
+    }
+    //pricePerUnit is empty, negative or zero
+    let price = $("#newPreisProEinheit").val();
+    if (isEmpty(price) || price <= 0) {
+        M.toast({
+            html: 'Kein gültiger Preis pro Einheit angegeben'
+        });
+        return false;
+    }
+    //everything is valid
+    return true;
+}
 
 function getChartParams(type) {
     let chartId;
@@ -205,49 +298,56 @@ function createEditBtn(tbody, type) {
 
 //edit entry in modal
 $("#btnEditEntry").on("click", (event) => {
-    //pull data
-    let id = $("#editIdHolder").text();
-    id = mysql.escape(id);
-    let type = $("#newType").val();
-    let typeId;
-    if (type === "Wasser") {
-        typeId = 1;
-    } else if (type === "Strom") {
-        typeId = 2;
-    } else if (type === "Gas") {
-        typeId = 3;
-    }
-    typeId = mysql.escape(typeId);
+    if (validateEditEntryForm()) {
+        //pull data
+        let id = $("#editIdHolder").text();
+        id = mysql.escape(id);
+        let type = $("#newType").val();
+        let typeId;
+        if (type === "Wasser") {
+            typeId = 1;
+        } else if (type === "Strom") {
+            typeId = 2;
+        } else if (type === "Gas") {
+            typeId = 3;
+        }
+        typeId = mysql.escape(typeId);
 
-    let counterNr = mysql.escape($("#newZählernummer").val());
-    let date = $("#newDatum").val();
-    let formatDate = mysql.escape(formatDateToSQL(date));
-    let amount = mysql.escape($("#newVerbrauch").val());
-    let price = $("#newPreisProEinheit").val();
-    price = price.replace(",", ".");
-    price = mysql.escape(price);
+        let counterNr = mysql.escape($("#newZählernummer").val());
+        let date = $("#newDatum").val();
+        let formatDate = mysql.escape(formatDateToSQL(date));
+        let amount = mysql.escape($("#newVerbrauch").val());
+        let price = $("#newPreisProEinheit").val();
+        price = price.replace(",", ".");
+        price = mysql.escape(price);
 
-    //query
-    let query = `UPDATE zaehlerstand
+        //query
+        let query = `UPDATE zaehlerstand
                 SET zaehlernummer = ${counterNr}, datum = ${formatDate}, verbrauch = ${amount}, preisProEinheit = ${price},
                 zaehlertyp_id = ${typeId}
                 WHERE id = ${id};`;
-    console.log(query);
-    connection.query(query, (err, result) => {
-        if (err) {
-            console.log("An error ocurred performing the query.");
-            console.log(err);
-            return;
-        }
-        console.log("Updated entry in database");
-    });
+        console.log(query);
+        connection.query(query, (err, result) => {
+            if (err) {
+                console.log("An error ocurred performing the query.");
+                console.log(err);
+                return;
+            }
+            console.log("Updated entry in database");
+        });
 
-    refreshTable();
-    loadCounterSelect();
+        refreshTable();
+        loadCounterSelect();
 
-    M.toast({
-        html: 'Zählerstand verändert'
-    });
+        //close modal
+        let elemModal = document.querySelector("#modalEditEntry");
+        let instanceAddModal = M.Modal.getInstance(elemModal);
+        instanceAddModal.close();
+
+        M.toast({
+            html: 'Zählerstand verändert'
+        });
+    }
 });
 
 function createDelBtn(tbody) {
