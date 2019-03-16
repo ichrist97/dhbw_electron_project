@@ -339,6 +339,10 @@ $("#btnEditEntry").on("click", (event) => {
         refreshTable();
         loadCounterSelect();
 
+        //refresh chart
+        let chartParam = getChartParams(type);
+        loadChart(chartParam);
+
         //close modal
         let elemModal = document.querySelector("#modalEditEntry");
         let instanceAddModal = M.Modal.getInstance(elemModal);

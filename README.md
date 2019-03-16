@@ -10,7 +10,11 @@ The application is created with [Electron](https://electronjs.org/). Therefore i
 
 ## To Use
 
-To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. 
+
+First a local MySQL Database must be started. The database date can be imported from the folder db with database.sql.
+
+Then from your command line:
 
 ```bash
 # Clone this repository

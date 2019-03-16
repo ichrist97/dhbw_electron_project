@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 02. Mrz 2019 um 09:55
+-- Erstellungszeit: 16. Mrz 2019 um 11:28
 -- Server-Version: 10.1.37-MariaDB
 -- PHP-Version: 7.2.12
 
@@ -65,7 +65,7 @@ INSERT INTO `zaehlerstand` (`id`, `zaehlernummer`, `datum`, `verbrauch`, `preisP
 (21, '91862', '2018-10-08', 2077.5, 5.5, 3),
 (22, '91862', '2018-10-23', 2079.78, 5.5, 3),
 (23, '91862', '2018-10-27', 2100, 5.5, 3),
-(24, '91862', '2018-10-05', 2106.3, 5.5, 3),
+(24, '91862', '2018-10-05', 2055, 5.5, 3),
 (25, '91862', '2018-11-22', 2185, 5.5, 3),
 (26, '91862', '2018-12-02', 2241, 5.5, 3),
 (27, '91862', '2019-01-05', 2556, 5.5, 3),
@@ -86,8 +86,28 @@ INSERT INTO `zaehlerstand` (`id`, `zaehlernummer`, `datum`, `verbrauch`, `preisP
 (45, '64849', '2018-10-01', 5024, 25.1, 2),
 (46, '64849', '2019-02-01', 6549, 25.1, 2),
 (47, '8EMTB217000753', '2018-10-01', 532, 2.27, 1),
-(48, '8EMTB217000753', '2019-02-01', 581, 2.27, 2),
+(48, '8EMTB217000753', '2019-02-01', 581, 2.27, 1),
 (49, '91862', '2019-03-01', 3221, 5.5, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Tabellenstruktur für Tabelle `zaehlertyp`
+--
+
+CREATE TABLE `zaehlertyp` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Daten für Tabelle `zaehlertyp`
+--
+
+INSERT INTO `zaehlertyp` (`id`, `name`) VALUES
+(1, 'Wasser'),
+(2, 'Strom'),
+(3, 'Gas');
 
 --
 -- Indizes der exportierten Tabellen
@@ -101,6 +121,12 @@ ALTER TABLE `zaehlerstand`
   ADD KEY `fk_zaehlertyp` (`zaehlertyp_id`) USING BTREE;
 
 --
+-- Indizes für die Tabelle `zaehlertyp`
+--
+ALTER TABLE `zaehlertyp`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
@@ -108,7 +134,13 @@ ALTER TABLE `zaehlerstand`
 -- AUTO_INCREMENT für Tabelle `zaehlerstand`
 --
 ALTER TABLE `zaehlerstand`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+
+--
+-- AUTO_INCREMENT für Tabelle `zaehlertyp`
+--
+ALTER TABLE `zaehlertyp`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints der exportierten Tabellen
